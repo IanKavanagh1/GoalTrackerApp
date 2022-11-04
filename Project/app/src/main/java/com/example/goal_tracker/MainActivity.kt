@@ -1,6 +1,6 @@
 package com.example.goal_tracker
 
-import account_creation.LoginActivityActivity
+import account_creation.LoginActivity
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
@@ -30,7 +30,7 @@ class MainActivity : AppCompatActivity()
 
     private fun startLoginActivity()
     {
-        var intent: Intent = Intent(this, LoginActivityActivity::class.java)
+        var intent: Intent = Intent(this, LoginActivity::class.java)
         startActivity(intent)
     }
 }
