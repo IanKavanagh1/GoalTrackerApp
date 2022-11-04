@@ -1,9 +1,11 @@
 package com.example.goal_tracker
 
+import account_creation.LoginActivityActivity
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.widget.Button
+import android.content.Intent
 
 class MainActivity : AppCompatActivity()
 {
@@ -18,7 +20,17 @@ class MainActivity : AppCompatActivity()
         _loginButton = findViewById(R.id.login_button)
         _registerButton = findViewById(R.id.register_button)
 
-        _loginButton?.setOnClickListener { Log.d("Logging App", "Login Button Clicked") }
+        _loginButton?.setOnClickListener {
+            startLoginActivity()
+            Log.d("Logging App", "Login Button Clicked")
+        }
+
         _registerButton?.setOnClickListener { Log.d("Logging App", "Register Button Clicked") }
+    }
+
+    private fun startLoginActivity()
+    {
+        var intent: Intent = Intent(this, LoginActivityActivity::class.java)
+        startActivity(intent)
     }
 }
