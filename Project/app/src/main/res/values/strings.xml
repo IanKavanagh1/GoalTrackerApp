@@ -4,4 +4,7 @@
     <string name="tip">Please Login or Register an Account to get started</string>
     <string name="login_button">Login</string>
     <string name="register_button">Register</string>
+    <string name="enter_user_name">Enter User Name </string>
+    <string name="enter_email">Enter Email </string>
+    <string name="enter_password">Enter Password </string>
 </resources>

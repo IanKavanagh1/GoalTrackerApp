@@ -1,6 +1,7 @@
 package com.example.goal_tracker
 
 import account_creation.LoginActivity
+import account_creation.RegisterActivity
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
@@ -25,12 +26,21 @@ class MainActivity : AppCompatActivity()
             Log.d("Logging App", "Login Button Clicked")
         }
 
-        _registerButton?.setOnClickListener { Log.d("Logging App", "Register Button Clicked") }
+        _registerButton?.setOnClickListener {
+            startRegisterActivity()
+            Log.d("Logging App", "Register Button Clicked")
+        }
     }
 
     private fun startLoginActivity()
     {
         var intent: Intent = Intent(this, LoginActivity::class.java)
+        startActivity(intent)
+    }
+
+    private fun startRegisterActivity()
+    {
+        var intent = Intent(this, RegisterActivity::class.java)
         startActivity(intent)
     }
 }

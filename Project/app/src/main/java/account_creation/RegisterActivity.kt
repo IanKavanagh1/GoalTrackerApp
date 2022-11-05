@@ -3,7 +3,6 @@ package account_creation
 import android.content.Intent
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
-import android.util.Log
 import android.view.KeyEvent
 import android.view.inputmethod.EditorInfo
 import android.widget.Button
@@ -12,9 +11,9 @@ import android.widget.TextView
 import com.example.goal_tracker.R
 import goal_creation.GoalManagement
 
-class LoginActivity : AppCompatActivity()
+class RegisterActivity : AppCompatActivity()
 {
-    private var loginButton: Button? = null
+    private var registerButton: Button? = null
     private var emailTextView: EditText? = null
     private var passwordTextView: EditText? = null
 
@@ -28,14 +27,14 @@ class LoginActivity : AppCompatActivity()
     override fun onCreate(savedInstanceState: Bundle?)
     {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.login_activity)
+        setContentView(R.layout.activity_register)
 
-        loginButton = findViewById(R.id.login)
+        registerButton = findViewById(R.id.register)
 
         emailTextView = findViewById(R.id.editEmailAddress)
         passwordTextView = findViewById(R.id.editPassword)
 
-        loginButton?.setOnClickListener { attemptLogin() }
+        registerButton?.setOnClickListener { createAccount() }
 
         /*TODO: Fix issue where user needs to click NEXT and DONE buttons
         *  on keyboard in order for the app to collect the email and password */
@@ -65,27 +64,15 @@ class LoginActivity : AppCompatActivity()
         })
     }
 
-    private fun attemptLogin()
+    private fun createAccount()
     {
-        Log.d("Logging App", "Attempting Login")
-        Log.d("Logging App", "User Email $userEmail")
-        Log.d("Logging App", "User Password $userPassword")
+        var account = UserAccount(userEmail, userPassword)
 
-        var testUser = UserAccount(userEmail, userPassword)
+        accountsDirectory.addAccount(account)
 
-        accountsDirectory.addAccount(testUser)
+        /*TODO: Auto Login After Account Is Created*/
 
-        if(accountsDirectory.checkAccounts(testUser))
-        {
-            Log.d("Logging App", "Account Found, Login Successful")
-
-            var intent = Intent(this, GoalManagement::class.java)
-            startActivity(intent)
-        }
-        else
-        {
-            /*TODO: Make this user facing*/
-            Log.d("Logging App", "Account Not Found, Login Failed")
-        }
+        var intent = Intent(this, GoalManagement::class.java)
+        startActivity(intent)
     }
 }
