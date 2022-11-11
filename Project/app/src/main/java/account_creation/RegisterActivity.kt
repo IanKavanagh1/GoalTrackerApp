@@ -10,6 +10,9 @@ import android.widget.EditText
 import android.widget.TextView
 import com.example.goal_tracker.R
 import goal_creation.GoalManagement
+import android.database.sqlite.SQLiteDatabase
+import database.TestDatabaseOpenHelper
+import android.content.ContentValues
 
 class RegisterActivity : AppCompatActivity()
 {
@@ -20,14 +23,17 @@ class RegisterActivity : AppCompatActivity()
     private var userEmail: String? = null
     private var userPassword: String? = null
 
-    /*TODO: Move this to a manager so we can access it in other files
-    *  rather than needing to create it each time*/
-    private var accountsDirectory: AccountsDirectory = AccountsDirectory()
+    private lateinit var testDatabaseOpenHelper: TestDatabaseOpenHelper
+    private lateinit var accountDatabase: SQLiteDatabase
 
     override fun onCreate(savedInstanceState: Bundle?)
     {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_register)
+
+        // Open A Writeable connection to the Accounts Database
+        testDatabaseOpenHelper = TestDatabaseOpenHelper(this, "account_details.db", null, 1)
+        accountDatabase = testDatabaseOpenHelper.writableDatabase
 
         registerButton = findViewById(R.id.register)
 
@@ -66,9 +72,13 @@ class RegisterActivity : AppCompatActivity()
 
     private fun createAccount()
     {
-        var account = UserAccount(userEmail, userPassword)
+        val newAccount: ContentValues = ContentValues().apply{
+            put("USER_EMAIL","$userEmail")
+            put("USER_PASSWORD","$userPassword")
+            put("USER_DISPLAY_NAME", "IAN TEST")
+        }
 
-        accountsDirectory.addAccount(account)
+        accountDatabase.insert("account_details", null, newAccount)
 
         /*TODO: Auto Login After Account Is Created*/
 
