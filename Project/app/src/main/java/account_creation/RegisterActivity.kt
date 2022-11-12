@@ -9,8 +9,8 @@ import android.widget.Button
 import android.widget.EditText
 import android.widget.TextView
 import com.example.goal_tracker.R
-import goal_creation.GoalManagement
 import android.util.Log
+import goal_creation.NewUserActivity
 
 class RegisterActivity : AppCompatActivity()
 {
@@ -71,7 +71,7 @@ class RegisterActivity : AppCompatActivity()
         if(accountManager.fetchAccount(userEmail, userPassword))
         {
             Log.d("Register Activity", "Account Created, Auto Login Success")
-            var intent = Intent(this, GoalManagement::class.java)
+            var intent = Intent(this, NewUserActivity::class.java)
             startActivity(intent)
         }
         else
