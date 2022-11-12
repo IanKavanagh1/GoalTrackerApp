@@ -1,7 +1,6 @@
 package account_creation
 
 import android.content.Intent
-import android.database.Cursor
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
@@ -12,8 +11,6 @@ import android.widget.EditText
 import android.widget.TextView
 import com.example.goal_tracker.R
 import goal_creation.GoalManagement
-import android.database.sqlite.SQLiteDatabase
-import database.TestDatabaseOpenHelper
 
 class LoginActivity : AppCompatActivity()
 {
@@ -21,20 +18,15 @@ class LoginActivity : AppCompatActivity()
     private var emailTextView: EditText? = null
     private var passwordTextView: EditText? = null
 
-    private var userEmail: String? = null
-    private var userPassword: String? = null
+    private var userEmail: String = ""
+    private var userPassword: String = ""
 
-    private lateinit var testDatabaseOpenHelper : TestDatabaseOpenHelper
-    private lateinit var accountDatabase: SQLiteDatabase
+    private var accountManager: AccountManager = AccountManager(this)
 
     override fun onCreate(savedInstanceState: Bundle?)
     {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.login_activity)
-
-        // Open A Read-Only connection to the Accounts Database
-        testDatabaseOpenHelper = TestDatabaseOpenHelper(this, "account_details.db", null, 1)
-        accountDatabase = testDatabaseOpenHelper.readableDatabase
 
         loginButton = findViewById(R.id.login)
 
@@ -74,33 +66,8 @@ class LoginActivity : AppCompatActivity()
     private fun attemptLogin()
     {
         Log.d("Logging App", "Attempting Login")
-        Log.d("Logging App", "User Email $userEmail")
-        Log.d("Logging App", "User Password $userPassword")
 
-        val table_name: String = "account_details"
-        val columns: Array<String> = arrayOf("ID", "USER_EMAIL", "USER_PASSWORD", "USER_DISPLAY_NAME")
-        val where: String? = "USER_EMAIL = ?"
-        val where_args: Array<String>? = arrayOf("$userEmail")
-        val group_by: String? = null
-        val having: String? = null
-        val order_by: String? = null
-
-        var c: Cursor = accountDatabase.query(table_name, columns, where, where_args, group_by, having, order_by)
-
-        var userFound: Boolean = false
-
-        var text: String = ""
-
-        c.moveToFirst()
-        for(i in 0 until c.count)
-        {
-            userFound = c.getInt(1).toString() == userEmail && c.getInt(2).toString() == userPassword
-            text += c.getInt(1).toString() + " " + c.getInt(2).toString()
-            Log.d("Logging App", text)
-            c.moveToNext()
-        }
-
-        if(userFound)
+        if(accountManager.fetchAccount(userEmail, userPassword))
         {
             Log.d("Logging App", "Account Found, Login Successful")
 

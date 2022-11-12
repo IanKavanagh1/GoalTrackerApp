@@ -8,4 +8,5 @@
     <string name="enter_email">Enter Email </string>
     <string name="enter_password">Enter Password </string>
     <string name="failed_login">Failed To Login!</string>
+    <string name="retry_login">Retry</string>
 </resources>

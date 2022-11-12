@@ -10,9 +10,7 @@ import android.widget.EditText
 import android.widget.TextView
 import com.example.goal_tracker.R
 import goal_creation.GoalManagement
-import android.database.sqlite.SQLiteDatabase
-import database.TestDatabaseOpenHelper
-import android.content.ContentValues
+import android.util.Log
 
 class RegisterActivity : AppCompatActivity()
 {
@@ -20,20 +18,16 @@ class RegisterActivity : AppCompatActivity()
     private var emailTextView: EditText? = null
     private var passwordTextView: EditText? = null
 
-    private var userEmail: String? = null
-    private var userPassword: String? = null
+    private var userEmail: String = ""
+    private var userPassword: String = ""
 
-    private lateinit var testDatabaseOpenHelper: TestDatabaseOpenHelper
-    private lateinit var accountDatabase: SQLiteDatabase
+    //TODO: Make manager static so we don't need an instance each time we want to use it
+    private var accountManager: AccountManager = AccountManager(this)
 
     override fun onCreate(savedInstanceState: Bundle?)
     {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_register)
-
-        // Open A Writeable connection to the Accounts Database
-        testDatabaseOpenHelper = TestDatabaseOpenHelper(this, "account_details.db", null, 1)
-        accountDatabase = testDatabaseOpenHelper.writableDatabase
 
         registerButton = findViewById(R.id.register)
 
@@ -72,17 +66,20 @@ class RegisterActivity : AppCompatActivity()
 
     private fun createAccount()
     {
-        val newAccount: ContentValues = ContentValues().apply{
-            put("USER_EMAIL","$userEmail")
-            put("USER_PASSWORD","$userPassword")
-            put("USER_DISPLAY_NAME", "IAN TEST")
+        accountManager.createAccount(userEmail, userPassword, "")
+
+        if(accountManager.fetchAccount(userEmail, userPassword))
+        {
+            Log.d("Register Activity", "Account Created, Auto Login Success")
+            var intent = Intent(this, GoalManagement::class.java)
+            startActivity(intent)
         }
+        else
+        {
+            Log.d("Register Activity", "Account Not Found, Auto Login Failed")
 
-        accountDatabase.insert("account_details", null, newAccount)
-
-        /*TODO: Auto Login After Account Is Created*/
-
-        var intent = Intent(this, GoalManagement::class.java)
-        startActivity(intent)
+            var intent = Intent(this, FailedLogin::class.java)
+            startActivity(intent)
+        }
     }
 }
