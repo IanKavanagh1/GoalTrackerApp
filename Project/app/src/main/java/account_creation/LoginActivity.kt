@@ -18,12 +18,10 @@ class LoginActivity : AppCompatActivity()
     private var emailTextView: EditText? = null
     private var passwordTextView: EditText? = null
 
-    private var userEmail: String? = null
-    private var userPassword: String? = null
+    private var userEmail: String = ""
+    private var userPassword: String = ""
 
-    /*TODO: Move this to a manager so we can access it in other files
-    *  rather than needing to create it each time*/
-    private var accountsDirectory: AccountsDirectory = AccountsDirectory()
+    private var accountManager: AccountManager = AccountManager(this)
 
     override fun onCreate(savedInstanceState: Bundle?)
     {
@@ -68,14 +66,8 @@ class LoginActivity : AppCompatActivity()
     private fun attemptLogin()
     {
         Log.d("Logging App", "Attempting Login")
-        Log.d("Logging App", "User Email $userEmail")
-        Log.d("Logging App", "User Password $userPassword")
 
-        var testUser = UserAccount(userEmail, userPassword)
-
-        accountsDirectory.addAccount(testUser)
-
-        if(accountsDirectory.checkAccounts(testUser))
+        if(accountManager.fetchAccount(userEmail, userPassword))
         {
             Log.d("Logging App", "Account Found, Login Successful")
 
@@ -84,8 +76,10 @@ class LoginActivity : AppCompatActivity()
         }
         else
         {
-            /*TODO: Make this user facing*/
             Log.d("Logging App", "Account Not Found, Login Failed")
+
+            var intent = Intent(this, FailedLogin::class.java)
+            startActivity(intent)
         }
     }
 }
