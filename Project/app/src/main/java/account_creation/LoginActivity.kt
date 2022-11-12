@@ -10,7 +10,7 @@ import android.widget.Button
 import android.widget.EditText
 import android.widget.TextView
 import com.example.goal_tracker.R
-import goal_creation.GoalManagement
+import goal_creation.GoalManagementActivity
 
 class LoginActivity : AppCompatActivity()
 {
@@ -71,7 +71,8 @@ class LoginActivity : AppCompatActivity()
         {
             Log.d("Logging App", "Account Found, Login Successful")
 
-            var intent = Intent(this, GoalManagement::class.java)
+            //TODO: Make going to Goal Creation/Management Activity data drive based on if the user has goals
+            var intent = Intent(this, GoalManagementActivity::class.java)
             startActivity(intent)
         }
         else
