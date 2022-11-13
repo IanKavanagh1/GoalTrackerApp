@@ -10,7 +10,6 @@ import android.view.inputmethod.EditorInfo
 import android.widget.Button
 import android.widget.EditText
 import android.widget.TextView
-import com.example.goal_tracker.MainActivity
 import com.example.goal_tracker.R
 import com.example.goal_tracker.databinding.FragmentGoalCreationBinding
 
@@ -95,6 +94,7 @@ class GoalCreationFragment : Fragment()
         //TODO: TEST TO MAKE SURE THE GOAL WAS ADDED SUCCESSFULLY
         goalManager?.fetchGoals(goalName)
 
-        MainActivity().replaceFragment(GoalManagementFragment())
+        activity?.supportFragmentManager?.beginTransaction()?.replace(R.id.frameLayout, GoalManagementFragment(), "")
+            ?.addToBackStack("null")?.commit()
     }
 }
