@@ -7,6 +7,7 @@ import app_navigation.StartUpFragment
 import com.example.goal_tracker.databinding.ActivityMainBinding
 import exercise_planner.ExerciseMainFragment
 import goal_creation.GoalCreationFragment
+import goal_creation.GoalManagementFragment
 import meal_prep.MealMainFragment
 import settings.SettingsFragment
 
@@ -21,14 +22,13 @@ class MainActivity : AppCompatActivity()
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding?.root)
 
-        replaceFragment(StartUpFragment())
+        replaceFragment(GoalCreationFragment())
 
         binding?.bottomNavigationView?.setOnNavigationItemSelectedListener {
 
             when(it.itemId)
             {
-                //TODO: Replace with GoalManagementFragment
-                R.id.home -> replaceFragment(GoalCreationFragment())
+                R.id.home -> replaceFragment(GoalManagementFragment())
                 R.id.meals -> replaceFragment(MealMainFragment())
                 R.id.exercise -> replaceFragment(ExerciseMainFragment())
                 R.id.settings -> replaceFragment(SettingsFragment())

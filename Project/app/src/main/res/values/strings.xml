@@ -1,7 +1,7 @@
 <resources>
     <string name="app_name">Goal Tracker</string>
     <string name="welcome_label">Welcome!</string>
-    <string name="tip">Please Login or Register an Account to get started</string>
+    <string name="tip">Please Create an Account To Get Started</string>
     <string name="login_button">Login</string>
     <string name="register_button">Register</string>
     <string name="enter_user_name">Enter User Name </string>
