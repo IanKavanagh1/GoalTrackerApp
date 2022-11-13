@@ -9,8 +9,8 @@ import android.view.inputmethod.EditorInfo
 import android.widget.Button
 import android.widget.EditText
 import android.widget.TextView
+import com.example.goal_tracker.MainActivity
 import com.example.goal_tracker.R
-import goal_creation.GoalManagementActivity
 
 class LoginActivity : AppCompatActivity()
 {
@@ -71,8 +71,8 @@ class LoginActivity : AppCompatActivity()
         {
             Log.d("Logging App", "Account Found, Login Successful")
 
-            //TODO: Make going to Goal Creation/Management Activity data drive based on if the user has goals
-            var intent = Intent(this, GoalManagementActivity::class.java)
+           //TODO: Replace with Fragment system
+            var intent = Intent(this, MainActivity::class.java)
             startActivity(intent)
         }
         else
