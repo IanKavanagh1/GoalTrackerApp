@@ -1,46 +1,47 @@
 package com.example.goal_tracker
 
-import account_creation.LoginActivity
-import account_creation.RegisterActivity
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
-import android.util.Log
-import android.widget.Button
-import android.content.Intent
+import android.support.v4.app.Fragment
+import app_navigation.StartUpFragment
+import com.example.goal_tracker.databinding.ActivityMainBinding
+import exercise_planner.ExerciseMainFragment
+import goal_creation.GoalCreationFragment
+import meal_prep.MealMainFragment
+import settings.SettingsFragment
 
 class MainActivity : AppCompatActivity()
 {
-    private var _loginButton: Button? = null
-    private var _registerButton: Button? = null
+    var binding: ActivityMainBinding? = null
 
     override fun onCreate(savedInstanceState: Bundle?)
     {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
 
-        _loginButton = findViewById(R.id.login_button)
-        _registerButton = findViewById(R.id.register_button)
+        binding = ActivityMainBinding.inflate(layoutInflater)
+        setContentView(binding?.root)
 
-        _loginButton?.setOnClickListener {
-            startLoginActivity()
-            Log.d("Logging App", "Login Button Clicked")
-        }
+        replaceFragment(StartUpFragment())
 
-        _registerButton?.setOnClickListener {
-            startRegisterActivity()
-            Log.d("Logging App", "Register Button Clicked")
+        binding?.bottomNavigationView?.setOnNavigationItemSelectedListener {
+
+            when(it.itemId)
+            {
+                //TODO: Replace with GoalManagementFragment
+                R.id.home -> replaceFragment(GoalCreationFragment())
+                R.id.meals -> replaceFragment(MealMainFragment())
+                R.id.exercise -> replaceFragment(ExerciseMainFragment())
+                R.id.settings -> replaceFragment(SettingsFragment())
+            }
+
+            true
         }
     }
 
-    private fun startLoginActivity()
+    fun replaceFragment(fragment: Fragment)
     {
-        var intent: Intent = Intent(this, LoginActivity::class.java)
-        startActivity(intent)
-    }
-
-    private fun startRegisterActivity()
-    {
-        var intent = Intent(this, RegisterActivity::class.java)
-        startActivity(intent)
+       var fragmentTransaction = supportFragmentManager.beginTransaction()
+        fragmentTransaction.replace(R.id.frameLayout, fragment)
+        fragmentTransaction.commit()
     }
 }
