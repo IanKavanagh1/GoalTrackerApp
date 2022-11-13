@@ -4,10 +4,11 @@
     android:layout_height="match_parent"
     tools:context="goal_creation.GoalManagementFragment">
 
-    <!-- TODO: Update blank fragment layout -->
     <TextView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:text="GOAL MANAGEMENT" />
+        android:text="@string/goal_manage_frag"
+        android:layout_gravity="center"
+        android:layout_margin="80dp"/>
 
 </FrameLayout>

@@ -18,4 +18,5 @@
     <string name="meal_frag">Meal Fragment - Coming in Milestone 2</string>
     <string name="exercise_frag">Exercise Fragment - Coming in Milestone 2</string>
     <string name="settings_frag">Settings Fragment - Coming in Milestone 2</string>
+    <string name="goal_manage_frag">Goal Management Fragment - Coming in Milestone 2</string>
 </resources>
