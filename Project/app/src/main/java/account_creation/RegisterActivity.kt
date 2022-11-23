@@ -11,7 +11,6 @@ import android.widget.TextView
 import com.example.goal_tracker.R
 import android.util.Log
 import com.example.goal_tracker.MainActivity
-import goal_creation.NewUserActivity
 
 class RegisterActivity : AppCompatActivity()
 {

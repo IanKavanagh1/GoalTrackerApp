@@ -1,4 +1,4 @@
-package goal_creation
+package feature_goals
 
 import android.content.ContentValues
 import android.content.Context
@@ -10,8 +10,8 @@ import database.GoalDatabaseOpenHelper
 class GoalManager (context: Context)
 {
     private val table_name = "user_goals"
-    private val columns: Array<String> = arrayOf("ID", "GOAL_NAME", "GOAL_TARGET", "GOAL_CURRENT")
-    private val where: String? = "GOAL_NAME = ?"
+    private val columns: Array<String> = arrayOf("GOAL_ID", "GOAL_TYPE", "GOAL_NAME", "GOAL_TARGET", "USER_ID")
+    private val where: String? = "USER_ID = ?"
     private var where_args: Array<String>? = null
     private val group_by: String? = null
     private val having: String? = null
@@ -20,26 +20,30 @@ class GoalManager (context: Context)
     private var goalDatabaseOpenHelper = GoalDatabaseOpenHelper(context, "user_goals.db", null, 1)
     private lateinit var goalDatabase: SQLiteDatabase
 
-    public fun createGoal(goalName: String, goalTarget: String, goalCurrent: String)
+    public fun createGoal(goalType: Int, goalName: String, goalTarget: String, userId: Int)
     {
         // Open Writeable connection with Database
         goalDatabase = goalDatabaseOpenHelper.writableDatabase
 
         var newGoal: ContentValues = ContentValues().apply {
+            put("GOAL_TYPE", goalType)
             put("GOAL_NAME", goalName)
             put("GOAL_TARGET", goalTarget)
-            put("GOAL_CURRENT", goalCurrent)
+            put("USER_ID", userId)
         }
 
         goalDatabase.insert(table_name, null, newGoal)
     }
 
-    public fun fetchGoals(goalName: String)
+    public fun fetchGoals(userId: Int) : ArrayList<GoalDataModel>
     {
+        // Create variable to store all the goals
+        var userGoals = ArrayList<GoalDataModel>()
+
         // Open Read-Only connection with Database
         goalDatabase = goalDatabaseOpenHelper.readableDatabase
 
-        where_args = arrayOf(goalName)
+        where_args = arrayOf(userId.toString())
 
         var c: Cursor = goalDatabase.query(table_name, columns, where, where_args, group_by, having, order_by)
 
@@ -48,11 +52,14 @@ class GoalManager (context: Context)
         c.moveToFirst()
         for(i in 0 until c.count)
         {
-            text += c.getInt(0).toString() + " " + c.getString(1) + " " + c.getString(2) + " " +
-                    c.getString(3) + "\n"
+            text += c.getInt(0).toString() + " " + c.getString(2) + " " + c.getString(3) + " " +
+                    "\n"
             Log.d("Goal Manager: Goal Data:", text)
             c.moveToNext()
+            userGoals.add(GoalDataModel(0, 0, c.getString(2),0f))
         }
+
+        return  userGoals
     }
 
     public fun updateGoal()

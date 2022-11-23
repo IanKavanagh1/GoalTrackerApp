@@ -7,15 +7,15 @@ import android.database.sqlite.SQLiteOpenHelper
 class GoalDatabaseOpenHelper(context: Context, name: String, factory: SQLiteDatabase.CursorFactory?,
                              version: Int) : SQLiteOpenHelper(context, name, factory, version)
 {
-    //TODO: Review database design as a whole
-    private val CREATE_TABLE :String = "create table user_goals(" +
-            "ID integer primary key autoincrement,"+
+    private val CREATE_TABLE :String = "CREATE TABLE user_goals(" +
+            "GOAL_ID integer PRIMARY KEY AUTOINCREMENT,"+
+            "GOAL_TYPE integer," +
             "GOAL_NAME string," +
             "GOAL_TARGET string," +
-            "GOAL_CURRENT string" +
+            "USER_ID integer, FOREIGN KEY('USER_ID') REFERENCES account_details(ID)" +
             ")"
 
-    private val DROP_TABLE: String = "drop table user_goals"
+    private val DROP_TABLE: String = "DROP TABLE user_goals"
 
     override fun onCreate(p0: SQLiteDatabase?) {
         p0?.execSQL(CREATE_TABLE)

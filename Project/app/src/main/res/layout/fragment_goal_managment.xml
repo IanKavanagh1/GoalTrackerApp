@@ -3,47 +3,10 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="goal_creation.GoalManagementFragment">
+    tools:context="feature_goals.GoalManagementFragment">
 
-    <TextView
-        android:id="@+id/textView12"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/goals_title"
-        android:textSize="20sp"
-        android:layout_marginStart="170dp"/>
-
-    <ImageView
-        android:id="@+id/goalIcon"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:contentDescription="@string/goal_item_name"
-        android:src="@drawable/ic_baseline_fitness_center_24"
-        android:layout_marginVertical="50dp"
-        android:layout_marginStart="30dp"/>
-
-    <TextView
-        android:id="@+id/goalName"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/goal_item_name"
-        android:layout_marginVertical="50dp"
-        android:layout_marginStart="80dp"
-        />
-
-    <TextView
-        android:id="@+id/goalTarget"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/goal_item_target"
-        android:layout_marginVertical="70dp"
-        android:layout_marginStart="80dp"/>
-
-    <TextView
-        android:id="@+id/goalProgess"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/goal_item_progress"
-        android:layout_marginVertical="70dp"
-        android:layout_marginStart="190dp"/>
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/goal_recycler_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
 </FrameLayout>

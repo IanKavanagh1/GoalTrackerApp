@@ -13,28 +13,7 @@
         android:theme="@style/Theme.Goaltracker"
         tools:targetApi="31">
         <activity
-            android:name="goal_creation.GoalCreationActivity"
-            android:exported="false">
-            <meta-data
-                android:name="android.app.lib_name"
-                android:value="" />
-        </activity>
-        <activity
-            android:name="goal_creation.NewUserActivity"
-            android:exported="false">
-            <meta-data
-                android:name="android.app.lib_name"
-                android:value="" />
-        </activity>
-        <activity
             android:name="account_creation.FailedLogin"
-            android:exported="false">
-            <meta-data
-                android:name="android.app.lib_name"
-                android:value="" />
-        </activity>
-        <activity
-            android:name="goal_creation.GoalManagementActivity"
             android:exported="false">
             <meta-data
                 android:name="android.app.lib_name"
