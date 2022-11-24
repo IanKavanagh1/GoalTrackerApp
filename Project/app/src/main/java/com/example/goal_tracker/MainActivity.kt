@@ -3,11 +3,10 @@ package com.example.goal_tracker
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.support.v4.app.Fragment
-import app_navigation.StartUpFragment
 import com.example.goal_tracker.databinding.ActivityMainBinding
 import exercise_planner.ExerciseMainFragment
-import goal_creation.GoalCreationFragment
-import goal_creation.GoalManagementFragment
+import feature_goals.GoalCreationFragment
+import feature_goals.GoalManagementFragment
 import meal_prep.MealMainFragment
 import settings.SettingsFragment
 
