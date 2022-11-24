@@ -21,8 +21,6 @@ class LoginActivity : AppCompatActivity()
     private var userEmail: String = ""
     private var userPassword: String = ""
 
-    private var accountManager: AccountManager = AccountManager(this)
-
     override fun onCreate(savedInstanceState: Bundle?)
     {
         super.onCreate(savedInstanceState)
@@ -66,21 +64,5 @@ class LoginActivity : AppCompatActivity()
     private fun attemptLogin()
     {
         Log.d("Logging App", "Attempting Login")
-
-        if(accountManager.fetchAccount(userEmail, userPassword))
-        {
-            Log.d("Logging App", "Account Found, Login Successful")
-
-           //TODO: Replace with Fragment system
-            var intent = Intent(this, MainActivity::class.java)
-            startActivity(intent)
-        }
-        else
-        {
-            Log.d("Logging App", "Account Not Found, Login Failed")
-
-            var intent = Intent(this, FailedLogin::class.java)
-            startActivity(intent)
-        }
     }
 }
