@@ -9,7 +9,7 @@ import database.GoalDatabaseOpenHelper
 
 class GoalManager (context: Context)
 {
-    private val table_name = "user_goals"
+    private val table_name = "goals_test"
     private val columns: Array<String> = arrayOf("GOAL_ID", "GOAL_TYPE", "GOAL_NAME", "GOAL_TARGET", "USER_ID")
     private val where: String? = "USER_ID = ?"
     private var where_args: Array<String>? = null
@@ -17,7 +17,7 @@ class GoalManager (context: Context)
     private val having: String? = null
     private val order_by: String? = null
 
-    private var goalDatabaseOpenHelper = GoalDatabaseOpenHelper(context, "user_goals.db", null, 1)
+    private var goalDatabaseOpenHelper = GoalDatabaseOpenHelper(context, "goals_test.db", null, 1)
     private lateinit var goalDatabase: SQLiteDatabase
 
     public fun createGoal(goalType: Int, goalName: String, goalTarget: String, userId: Int)
@@ -55,8 +55,8 @@ class GoalManager (context: Context)
             text += c.getInt(0).toString() + " " + c.getString(2) + " " + c.getString(3) + " " +
                     "\n"
             Log.d("Goal Manager: Goal Data:", text)
-            c.moveToNext()
             userGoals.add(GoalDataModel(0, 0, c.getString(2),0f))
+            c.moveToNext()
         }
 
         return  userGoals
