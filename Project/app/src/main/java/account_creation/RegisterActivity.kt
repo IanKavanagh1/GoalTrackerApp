@@ -7,6 +7,7 @@ import android.widget.Button
 import android.widget.EditText
 import com.example.goal_tracker.R
 import android.widget.Toast
+import app_preferences.UserPreferenceManager
 import com.example.goal_tracker.MainActivity
 
 class RegisterActivity : AppCompatActivity()
@@ -20,6 +21,8 @@ class RegisterActivity : AppCompatActivity()
     private var userEmail: String = ""
     private var userPassword: String = ""
     private var userDisplayName: String = ""
+
+    private val USER_PREFS = "user_prefs"
 
     override fun onCreate(savedInstanceState: Bundle?)
     {
@@ -61,6 +64,14 @@ class RegisterActivity : AppCompatActivity()
                 if (AccountManager.createAccount(userEmail, userPassword, userDisplayName))
                 {
                     Toast.makeText(this, "Registration Successful!", Toast.LENGTH_SHORT).show()
+
+                    var sharedPreferences = getSharedPreferences(USER_PREFS, MODE_PRIVATE)
+                    var editor = sharedPreferences.edit()
+
+                    editor.apply {
+                        putBoolean("loggedIn", true)
+                    }.apply()
+
                     var intent = Intent(this, MainActivity::class.java)
                     startActivity(intent)
                 }
