@@ -1,8 +1,8 @@
 package feature_goals
 
-import account_creation.AccountManager
 import android.os.Bundle
 import android.support.v4.app.Fragment
+import android.support.v7.app.AppCompatActivity
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -24,6 +24,8 @@ class GoalCreationFragment : Fragment()
     private var createGoalButton: Button? = null
 
     private var adapter: ArrayAdapter<GoalTypes>? = null
+
+    private val USER_PREFS = "user_prefs"
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -64,17 +66,17 @@ class GoalCreationFragment : Fragment()
         var goalName = goalNameEditText?.text.toString()
         var goalTarget = goalTargetEditText?.text.toString()
 
-        //TODO: GET ACTUAL USER ID From the AccountManager
-        var userId = AccountManager.getUserId("", "")
+        activity?.let {
+            var sharedPreferences = it.getSharedPreferences(USER_PREFS, AppCompatActivity.MODE_PRIVATE)
+            var userId = sharedPreferences.getInt("userId", -1)
 
-        goalManager?.createGoal(goalType, goalName, goalTarget, userId)
+            goalManager?.createGoal(goalType, goalName, goalTarget, userId)
 
-        //TODO: TEST TO MAKE SURE THE GOAL WAS ADDED SUCCESSFULLY
+            //TODO: TEST TO MAKE SURE THE GOAL WAS ADDED SUCCESSFULLY
+            goalManager?.fetchGoals(userId)
 
-        // get all the goals associated with the user
-        goalManager?.fetchGoals(userId)
-
-        activity?.supportFragmentManager?.beginTransaction()?.replace(R.id.frameLayout, GoalManagementFragment(), "")
-            ?.addToBackStack("null")?.commit()
+            it.supportFragmentManager?.beginTransaction()?.replace(R.id.frameLayout, GoalManagementFragment(), "")
+                ?.addToBackStack("null")?.commit()
+        }
     }
 }

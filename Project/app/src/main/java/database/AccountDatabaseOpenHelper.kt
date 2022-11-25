@@ -82,6 +82,7 @@ class AccountDatabaseOpenHelper(context: Context, name: String, factory: SQLiteD
         cursor.moveToFirst()
         for(i in 0 until cursor.count)
         {
+            Log.d("AccountDatabase","User Id for Logged In User Is ${cursor.getInt(0)}")
             return cursor.getInt(0)
         }
         return -1

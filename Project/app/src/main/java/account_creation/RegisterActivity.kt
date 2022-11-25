@@ -7,7 +7,6 @@ import android.widget.Button
 import android.widget.EditText
 import com.example.goal_tracker.R
 import android.widget.Toast
-import app_preferences.UserPreferenceManager
 import com.example.goal_tracker.MainActivity
 
 class RegisterActivity : AppCompatActivity()
@@ -70,6 +69,8 @@ class RegisterActivity : AppCompatActivity()
 
                     editor.apply {
                         putBoolean("loggedIn", true)
+                        remove("userId")
+                        putInt("userId", AccountManager.getUserId(userEmail,userPassword))
                     }.apply()
 
                     var intent = Intent(this, MainActivity::class.java)
