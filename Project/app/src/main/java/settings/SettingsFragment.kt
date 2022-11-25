@@ -9,7 +9,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
-import app_preferences.UserPreferenceManager
 import com.example.goal_tracker.R
 import com.example.goal_tracker.databinding.FragmentSettingsBinding
 
@@ -39,8 +38,6 @@ class SettingsFragment : Fragment()
 
     private fun logOut()
     {
-        //UserPreferenceManager.flagUserAsLoggedOut()
-
         activity?.let {
             var sharedPreferences = it.getSharedPreferences(USER_PREFS, AppCompatActivity.MODE_PRIVATE)
             var editor = sharedPreferences.edit()

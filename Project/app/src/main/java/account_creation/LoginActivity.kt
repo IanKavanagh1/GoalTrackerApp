@@ -3,11 +3,9 @@ package account_creation
 import android.content.Intent
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
-import android.util.Log
 import android.widget.Button
 import android.widget.EditText
 import android.widget.Toast
-import app_preferences.UserPreferenceManager
 import com.example.goal_tracker.MainActivity
 import com.example.goal_tracker.R
 
@@ -67,6 +65,8 @@ class LoginActivity : AppCompatActivity()
 
                 editor.apply {
                     putBoolean("loggedIn", true)
+                    remove("userId")
+                    putInt("userId", AccountManager.getUserId(userEmail,userPassword))
                 }.apply()
 
                 var intent = Intent(this, MainActivity::class.java)
