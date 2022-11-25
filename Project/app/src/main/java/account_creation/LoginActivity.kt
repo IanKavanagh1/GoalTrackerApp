@@ -3,12 +3,9 @@ package account_creation
 import android.content.Intent
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
-import android.util.Log
-import android.view.KeyEvent
-import android.view.inputmethod.EditorInfo
 import android.widget.Button
 import android.widget.EditText
-import android.widget.TextView
+import android.widget.Toast
 import com.example.goal_tracker.MainActivity
 import com.example.goal_tracker.R
 
@@ -17,6 +14,7 @@ class LoginActivity : AppCompatActivity()
     private var loginButton: Button? = null
     private var emailTextView: EditText? = null
     private var passwordTextView: EditText? = null
+    private var goToRegisterActBtn: Button? = null
 
     private var userEmail: String = ""
     private var userPassword: String = ""
@@ -26,43 +24,46 @@ class LoginActivity : AppCompatActivity()
         super.onCreate(savedInstanceState)
         setContentView(R.layout.login_activity)
 
+        AccountManager.setUpDatabase(this)
+
         loginButton = findViewById(R.id.login)
+        goToRegisterActBtn = findViewById(R.id.signUpBtn)
 
         emailTextView = findViewById(R.id.editEmailAddress)
         passwordTextView = findViewById(R.id.editPassword)
 
         loginButton?.setOnClickListener { attemptLogin() }
 
-        /*TODO: Fix issue where user needs to click NEXT and DONE buttons
-        *  on keyboard in order for the app to collect the email and password */
-
-        emailTextView?.setOnEditorActionListener ( object: TextView.OnEditorActionListener
-        {
-            override fun onEditorAction(p0: TextView?, p1: Int, p2: KeyEvent?): Boolean {
-                if(p1 == EditorInfo.IME_ACTION_NEXT)
-                {
-                    userEmail = emailTextView?.text.toString()
-                    return true
-                }
-                return false
-            }
-        })
-
-        passwordTextView?.setOnEditorActionListener ( object: TextView.OnEditorActionListener
-        {
-            override fun onEditorAction(p0: TextView?, p1: Int, p2: KeyEvent?): Boolean {
-                if(p1 == EditorInfo.IME_ACTION_DONE)
-                {
-                    userPassword = passwordTextView?.text.toString()
-                    return true
-                }
-                return false
-            }
-        })
+        goToRegisterActBtn?.setOnClickListener { goToRegisterActivity() }
     }
 
     private fun attemptLogin()
     {
-        Log.d("Logging App", "Attempting Login")
+        userEmail = emailTextView?.text.toString()
+        userPassword = passwordTextView?.text.toString()
+
+        if(userEmail == "" || userPassword == "" )
+        {
+            Toast.makeText(this, "Missing Fields", Toast.LENGTH_SHORT).show()
+        }
+        else
+        {
+            if (AccountManager.checkUserEmailAndPassword(userEmail, userPassword))
+            {
+                Toast.makeText(this, "Login Successful!", Toast.LENGTH_SHORT).show()
+                var intent = Intent(this, MainActivity::class.java)
+                startActivity(intent)
+            }
+            else
+            {
+                Toast.makeText(this, "Failed To Login! Please Check Login Details", Toast.LENGTH_SHORT).show()
+            }
+        }
+    }
+
+    private fun goToRegisterActivity()
+    {
+        var intent = Intent(this, RegisterActivity::class.java)
+        startActivity(intent)
     }
 }

@@ -26,4 +26,9 @@ object AccountManager
     {
         return testDatabaseOpenHelper.checkUserName(userEmail)
     }
+
+    public fun checkUserEmailAndPassword(userEmail: String, userPassword: String) : Boolean
+    {
+        return testDatabaseOpenHelper.checkUserNameAndPassword(userEmail, userPassword)
+    }
 }

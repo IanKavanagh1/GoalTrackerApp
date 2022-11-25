@@ -15,6 +15,7 @@ class RegisterActivity : AppCompatActivity()
     private var emailTextView: EditText? = null
     private var passwordTextView: EditText? = null
     private var displayNameTextView: EditText? = null
+    private var goToLoginActBtn: Button? = null
 
     private var userEmail: String = ""
     private var userPassword: String = ""
@@ -28,12 +29,15 @@ class RegisterActivity : AppCompatActivity()
         AccountManager.setUpDatabase(this)
 
         registerButton = findViewById(R.id.register)
+        goToLoginActBtn = findViewById(R.id.goToLoginBtn)
 
         emailTextView = findViewById(R.id.editEmailAddress)
         passwordTextView = findViewById(R.id.editPassword)
         displayNameTextView = findViewById(R.id.editDisplayName)
 
         registerButton?.setOnClickListener { createAccount() }
+
+        goToLoginActBtn?.setOnClickListener { goToLoginActivity() }
     }
 
     private fun createAccount()
@@ -66,5 +70,11 @@ class RegisterActivity : AppCompatActivity()
                 }
             }
         }
+    }
+
+    private fun goToLoginActivity()
+    {
+        var intent = Intent(this, LoginActivity::class.java)
+        startActivity(intent)
     }
 }
