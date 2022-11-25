@@ -1,7 +1,8 @@
 <resources>
     <string name="app_name">Goal Tracker</string>
     <string name="welcome_label">Welcome!</string>
-    <string name="tip">Please Create an Account To Get Started</string>
+    <string name="welcome_back_label">Welcome Back!</string>
+    <string name="tip">Create an Account to Get Started</string>
     <string name="login_button">Login</string>
     <string name="register_button">Register</string>
     <string name="enter_user_name">Enter User Name </string>
@@ -19,8 +20,9 @@
     <string name="exercise_frag">Exercise Fragment - Coming in Milestone 2</string>
     <string name="settings_frag">Settings Fragment - Coming in Milestone 2</string>
     <string name="goal_manage_frag">Goal Management Fragment - Coming in Milestone 2</string>
-    <string name="goal_item_name">Exercise 10 Times This Week</string>
-    <string name="goal_item_target">10</string>
-    <string name="goal_item_progress">5/10 - 50%</string>
     <string name="goals_title">GOALS!</string>
+    <string name="enter_display_name">Enter Display Name</string>
+    <string name="create_new_acc">Need an Account?</string>
+    <string name="have_acc">Already Have an Account? Login</string>
+    <string name="logout">Log Out</string>
 </resources>

@@ -1,61 +1,34 @@
 package account_creation
 
-import android.content.ContentValues
 import android.content.Context
-import android.database.Cursor
-import android.database.sqlite.SQLiteDatabase
-import android.util.Log
-import database.TestDatabaseOpenHelper
+import database.AccountDatabaseOpenHelper
 
-class AccountManager(context: Context)
+object AccountManager
 {
-    private val table_name = "account_details"
-    private val columns: Array<String> = arrayOf("ID", "USER_EMAIL", "USER_PASSWORD", "USER_DISPLAY_NAME")
-    private val where: String? = "USER_EMAIL = ?"
-    private var where_args: Array<String>? = null
-    private val group_by: String? = null
-    private val having: String? = null
-    private val order_by: String? = null
+    private lateinit var testDatabaseOpenHelper: AccountDatabaseOpenHelper
 
-    private var testDatabaseOpenHelper = TestDatabaseOpenHelper( context, "account_details.db", null, 1)
-    private lateinit var accountDatabase: SQLiteDatabase
-
-
-    public fun createAccount(userEmail: String, userPassword: String, userDisplayName: String)
+    public fun setUpDatabase(context: Context)
     {
-        // Open Writeable connection with Database
-        accountDatabase = testDatabaseOpenHelper.writableDatabase
-
-        val newAccount: ContentValues = ContentValues().apply{
-            put("USER_EMAIL", userEmail)
-            put("USER_PASSWORD", userPassword)
-            put("USER_DISPLAY_NAME", userDisplayName)
-        }
-
-        accountDatabase.insert("account_details", null, newAccount)
+        testDatabaseOpenHelper = AccountDatabaseOpenHelper( context, "users_test.db", null, 1)
     }
 
-    public fun fetchAccount(userEmail: String, userPassword: String) : Boolean
+    public fun createAccount(userEmail: String, userPassword: String, userDisplayName: String) : Boolean
     {
-        // Open Read-Only connection with Database
-        accountDatabase = testDatabaseOpenHelper.readableDatabase
+        return testDatabaseOpenHelper.insertData(userEmail, userPassword, userDisplayName)
+    }
 
-        var found = false
+    public fun getUserId(userEmail: String, userPassword: String) : Int
+    {
+        return testDatabaseOpenHelper.getUserId(userEmail, userPassword)
+    }
 
-        where_args = arrayOf(userEmail)
+    public fun checkUser(userEmail: String) : Boolean
+    {
+        return testDatabaseOpenHelper.checkUserName(userEmail)
+    }
 
-        var c: Cursor = accountDatabase.query(table_name, columns, where, where_args, group_by, having, order_by)
-
-        var text  = ""
-        c.moveToFirst()
-        for(i in 0 until c.count)
-        {
-            found = c.getString(1) == userEmail && c.getString(2) == userPassword
-            text += c.getString(1) + " " + c.getString(2)
-            Log.d("Account Details Found:", text)
-            c.moveToNext()
-        }
-
-        return found
+    public fun checkUserEmailAndPassword(userEmail: String, userPassword: String) : Boolean
+    {
+        return testDatabaseOpenHelper.checkUserNameAndPassword(userEmail, userPassword)
     }
 }

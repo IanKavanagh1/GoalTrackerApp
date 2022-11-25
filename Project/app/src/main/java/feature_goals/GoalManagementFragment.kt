@@ -1,5 +1,6 @@
 package feature_goals
 
+import account_creation.AccountManager
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.support.v7.widget.LinearLayoutManager
@@ -33,7 +34,7 @@ class GoalManagementFragment : Fragment()
             goalManager = GoalManager(it)
 
             //TODO: Use Actual UserId From AccountManager
-            var userGoals = goalManager?.fetchGoals(0)
+            var userGoals = goalManager?.fetchGoals(AccountManager.getUserId("",""))
 
             adapter = userGoals?.let{ it1 -> GoalRecyclerViewAdapter(it, it1) }
 
