@@ -47,14 +47,9 @@ class GoalManager (context: Context)
 
         var c: Cursor = goalDatabase.query(table_name, columns, where, where_args, group_by, having, order_by)
 
-        var text = ""
-
         c.moveToFirst()
         for(i in 0 until c.count)
         {
-            text += c.getInt(0).toString() + " " + c.getString(2) + " " + c.getString(3) + " " +
-                    "\n"
-            Log.d("Goal Manager: Goal Data:", text)
             userGoals.add(GoalDataModel(0, 0, c.getString(2),0f))
             c.moveToNext()
         }

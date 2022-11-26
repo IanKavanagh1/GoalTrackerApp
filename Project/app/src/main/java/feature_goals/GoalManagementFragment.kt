@@ -9,6 +9,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
 import com.example.goal_tracker.R
 import com.example.goal_tracker.databinding.FragmentGoalManagmentBinding
 
@@ -18,6 +19,7 @@ class GoalManagementFragment : Fragment()
     private var goalListView: RecyclerView? = null
     private var adapter: GoalRecyclerViewAdapter? = null
     private var layoutManager: LinearLayoutManager? = null
+    private var backButton: Button? = null
 
     private val USER_PREFS = "user_prefs"
 
@@ -48,9 +50,21 @@ class GoalManagementFragment : Fragment()
             layoutManager = LinearLayoutManager(it)
         }
 
+        backButton = view?.findViewById(R.id.backBtn)
+
+        backButton?.setOnClickListener {  goBackToCreationUI() }
+
         goalListView = view?.findViewById(R.id.goal_recycler_view)
 
         goalListView?.adapter = adapter
         goalListView?.layoutManager = layoutManager
+    }
+
+    private fun goBackToCreationUI()
+    {
+        activity?.let {
+            it.supportFragmentManager?.beginTransaction()?.replace(R.id.frameLayout, GoalCreationFragment(), "")
+                ?.addToBackStack("null")?.commit()
+        }
     }
 }
