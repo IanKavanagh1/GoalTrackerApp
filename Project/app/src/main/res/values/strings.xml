@@ -26,4 +26,21 @@
     <string name="have_acc">Already Have an Account? Login</string>
     <string name="logout">Log Out</string>
     <string name="back">Back</string>
+    <string name="total_steps">Total Steps</string>
+    <string name="av_heart_beat">Average Heart Rate</string>
+    <string name="burned_cals">Total Burned Calories</string>
+    <string name="check_heart">Check Heart Rate</string>
+    <string name="heart_rate">Heart Rate</string>
+    <string name="start_exercise">Start Exercise</string>
+    <string name="run_btn">Run</string>
+    <string name="start_run">Start Run</string>
+    <string name="stop_run">Stop Run</string>
+    <string name="start_latitude">Start Latitude</string>
+    <string name="start_longitude">Start Longitude</string>
+    <string name="total_run_time">Total Run Time:</string>
+    <string name="distance_covered">Total Distance Covered:</string>
+    <string name="distance_value">%1$.1f KMs</string>
+    <string name="to_do_run_ui">TODO: PLOT RUN ON MAP AND DISPLAY HERE</string>
+    <string name="shared_single_value_int">%1$d</string>
+    <string name="shared_single_value_dec">%1$.1f</string>
 </resources>
