@@ -19,6 +19,7 @@ import android.widget.TextView
 import android.widget.Toast
 import com.example.goal_tracker.R
 import com.example.goal_tracker.databinding.FragmentExerciseMainBinding
+import shared.Consts
 
 class ExerciseMainFragment : Fragment(), SensorEventListener
 {
@@ -39,9 +40,6 @@ class ExerciseMainFragment : Fragment(), SensorEventListener
     private var checkHeartRateBtn: Button? = null
     private var calorieBurnedText: TextView? = null
     private var goToRunFragButton: Button? = null
-
-    private val USER_PREFS = "user_prefs"
-
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -135,7 +133,7 @@ class ExerciseMainFragment : Fragment(), SensorEventListener
     private fun saveData()
     {
         activity?.let {
-            var sharedPreferences = it.getSharedPreferences(USER_PREFS, AppCompatActivity.MODE_PRIVATE)
+            var sharedPreferences = it.getSharedPreferences(Consts.USER_PREFS, AppCompatActivity.MODE_PRIVATE)
             var editor = sharedPreferences.edit()
 
             editor.apply {
@@ -147,7 +145,7 @@ class ExerciseMainFragment : Fragment(), SensorEventListener
     private fun loadData()
     {
         activity?.let {
-            var sharedPreferences = it.getSharedPreferences(USER_PREFS, AppCompatActivity.MODE_PRIVATE)
+            var sharedPreferences = it.getSharedPreferences(Consts.USER_PREFS, AppCompatActivity.MODE_PRIVATE)
 
             val savedStepCount = sharedPreferences.getFloat("steps", 0f)
             Log.d("Exercise", "Saved Steps : $savedStepCount")
