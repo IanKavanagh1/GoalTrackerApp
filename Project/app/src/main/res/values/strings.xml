@@ -43,4 +43,7 @@
     <string name="to_do_run_ui">TODO: PLOT RUN ON MAP AND DISPLAY HERE</string>
     <string name="shared_single_value_int">%1$d</string>
     <string name="shared_single_value_dec">%1$.1f</string>
+    <string name="time_hours_minutes_seconds_formatter">%2dh:%2dm:%2ds</string>
+    <string name="time_minutes_seconds_formatter">%2dm:%2ds</string>
+    <string name="time_seconds_formatter">%2ds</string>
 </resources>

@@ -18,14 +18,13 @@ import android.widget.Toast
 import com.example.goal_tracker.R
 import com.example.goal_tracker.databinding.FragmentRunBinding
 import java.math.RoundingMode
+import java.util.concurrent.TimeUnit
 import kotlin.math.*
 
 class RunFragment : Fragment()
 {
     private var startRunBtn: Button? = null
     private var stopRunBtn: Button? = null
-    private var startLonTextView: TextView? = null
-    private var startLatTextView: TextView? = null
     private var runTimeTextView: TextView? = null
     private var totalDistanceTextView: TextView? = null
 
@@ -40,6 +39,9 @@ class RunFragment : Fragment()
     private var endLongitude: Double = 0.0
     private var endLatitude: Double = 0.0
     private var totalDistanceCovered: Double = 0.0
+
+    private var startLocationListener: LocationListener? = null
+    private var endLocationListener: LocationListener? = null
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -61,19 +63,18 @@ class RunFragment : Fragment()
         startRunBtn = view?.findViewById(R.id.startRunBtn)
         stopRunBtn = view?.findViewById(R.id.stopRunBtn)
 
-        startLatTextView = view?.findViewById(R.id.startLat)
-        startLonTextView = view?.findViewById(R.id.startLon)
-
         runTimeTextView = view?.findViewById(R.id.runTime)
         totalDistanceTextView = view?.findViewById(R.id.distanceRan)
         totalDistanceTextView?.text = getString(R.string.distance_value, 0.0)
+
+        runTimeTextView?.text = getString(R.string.shared_single_value_int, 0)
 
         startRunBtn?.setOnClickListener { startRun() }
         stopRunBtn?.setOnClickListener { stopRun()  }
     }
 
-    private fun startRun() {
-
+    private fun startRun()
+    {
         activity?.let {
             if (ActivityCompat.checkSelfPermission(it,
                     android.Manifest.permission.ACCESS_COARSE_LOCATION)
@@ -95,37 +96,106 @@ class RunFragment : Fragment()
                 return
             }
 
+            startLocationListener = object : LocationListener {
+                override fun onLocationChanged(p0: Location) {
+                    startLongitude = p0.longitude
+                    startLatitude = p0.latitude
+
+                    // Once we have a location, we can remove the listener
+                    if(startLatitude > 0 || startLatitude < 0  && startLongitude > 0 || startLongitude < 0)
+                    {
+                        Log.d("Start Run", "Location Acquired, Removing Listener")
+                        locationManager?.removeUpdates(startLocationListener!!)
+                    }
+                }
+            }
+
             locationManager?.requestLocationUpdates(
                 LocationManager.NETWORK_PROVIDER,
                 5000,
                 0f,
-                object : LocationListener {
-                    override fun onLocationChanged(p0: Location) {
-                        Log.d("Run Fragment", "Start Location: ${p0.latitude} ${p0.longitude}")
-                        startLatTextView?.text = ("${p0.latitude}")
-                        startLonTextView?.text = ("${p0.longitude}")
+                startLocationListener!!)
 
-                        startLatitude = p0.latitude
-                        startLongitude = p0.longitude
-                    }
-                })
-
-            startTime = System.currentTimeMillis()/1000;
-            runTimeTextView?.text = "0"
+            startTime = System.currentTimeMillis()
+            runTimeTextView?.text = getString(R.string.shared_single_value_int, 0)
         }
     }
 
     private fun stopRun()
     {
-        endTime = System.currentTimeMillis()/1000;
+        activity?.let {
+            if (ActivityCompat.checkSelfPermission(
+                    it,
+                    android.Manifest.permission.ACCESS_COARSE_LOCATION
+                )
+                != PackageManager.PERMISSION_GRANTED ||
+                ActivityCompat.checkSelfPermission(
+                    it,
+                    android.Manifest.permission.ACCESS_FINE_LOCATION
+                )
+                != PackageManager.PERMISSION_GRANTED
+            ) {
+                // User has not granted permissions so request the permission and return
+                requestPermissions(
+                    arrayOf(
+                        android.Manifest.permission.ACCESS_COARSE_LOCATION,
+                        android.Manifest.permission.ACCESS_FINE_LOCATION
+                    ), 1
+                )
+
+                //User has not granted permissions, so do not add any listeners for the requested sensor
+                Toast.makeText(it, "LOCATION ACCESS PERMISSION REQUIRED", Toast.LENGTH_SHORT).show()
+                return
+            }
+        }
+
+        endLocationListener = object : LocationListener {
+            override fun onLocationChanged(p0: Location) {
+                endLongitude = p0.longitude
+                endLatitude = p0.latitude
+
+                // Once we have a location, we can remove the listener
+                if(endLatitude > 0 || endLatitude < 0  && endLongitude > 0 || endLongitude < 0)
+                {
+                    Log.d("Stop Run", "Location Acquired, Removing Listener")
+
+                    //Only calculate distance once we have received the end location
+                    var distance = calculateTotalDistance(startLatitude, endLatitude, startLongitude,
+                        endLongitude)
+
+                    totalDistanceTextView?.text = getString(R.string.distance_value, distance)
+
+                    locationManager?.removeUpdates(endLocationListener!!)
+                }
+            }
+        }
+
+        locationManager?.requestLocationUpdates(
+            LocationManager.NETWORK_PROVIDER,
+            5000,
+            0f,
+            endLocationListener!!)
+
+        endTime = System.currentTimeMillis()
         totalRunTime = endTime - startTime
 
-        runTimeTextView?.text = ("$totalRunTime")
+        val hours = TimeUnit.MILLISECONDS.toHours(totalRunTime) % 24
+        val minutes = TimeUnit.MILLISECONDS.toMinutes(totalRunTime) % 60
+        val seconds = TimeUnit.MILLISECONDS.toSeconds(totalRunTime) % 60
 
-        var distance = calculateTotalDistance(startLatitude, endLatitude, startLongitude,
-            endLongitude)
-
-        totalDistanceTextView?.text = getString(R.string.distance_value, distance)
+        if(hours == 0L && minutes == 0L)
+        {
+            runTimeTextView?.text = getString(R.string.time_seconds_formatter, seconds)
+        }
+        else if(hours == 0L && minutes > 0L)
+        {
+            runTimeTextView?.text = getString(R.string.time_minutes_seconds_formatter, minutes, seconds)
+        }
+        else
+        {
+            runTimeTextView?.text = getString(R.string.time_hours_minutes_seconds_formatter, hours,
+                minutes, seconds)
+        }
     }
 
     private fun calculateTotalDistance(startLat: Double, endLat: Double, startLon: Double, endLon: Double) : Double
