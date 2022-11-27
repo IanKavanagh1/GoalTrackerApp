@@ -1,5 +1,6 @@
 package exercise_planner
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.content.pm.PackageManager
 import android.location.Location
@@ -43,13 +44,9 @@ class RunFragment : Fragment()
     private var startLocationListener: LocationListener? = null
     private var endLocationListener: LocationListener? = null
 
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
-
-        var binding = FragmentRunBinding.inflate(layoutInflater, container, false)
-
+    override fun onCreateView( inflater: LayoutInflater, container: ViewGroup?,
+        savedInstanceState: Bundle?): View {
+        val binding = FragmentRunBinding.inflate(layoutInflater, container, false)
         return binding.root
     }
 
@@ -73,21 +70,22 @@ class RunFragment : Fragment()
         stopRunBtn?.setOnClickListener { stopRun()  }
     }
 
+    //Added Suppress Here as even though we request the permissions before adding listeners it
+    //complained about not having them
+    @SuppressLint("MissingPermission")
     private fun startRun()
     {
-        activity?.let {
-            if (ActivityCompat.checkSelfPermission(it,
-                    android.Manifest.permission.ACCESS_COARSE_LOCATION)
-                != PackageManager.PERMISSION_GRANTED ||
-                ActivityCompat.checkSelfPermission(it,
-                    android.Manifest.permission.ACCESS_FINE_LOCATION)
+        activity?.let{
+            if (ActivityCompat.checkSelfPermission(it, android.Manifest.permission.ACCESS_FINE_LOCATION)
+                != PackageManager.PERMISSION_GRANTED &&
+                ActivityCompat.checkSelfPermission(it, android.Manifest.permission.ACCESS_COARSE_LOCATION)
                 != PackageManager.PERMISSION_GRANTED)
             {
                 // User has not granted permissions so request the permission and return
                 requestPermissions(
                     arrayOf(
-                        android.Manifest.permission.ACCESS_COARSE_LOCATION,
-                        android.Manifest.permission.ACCESS_FINE_LOCATION
+                        android.Manifest.permission.ACCESS_FINE_LOCATION,
+                        android.Manifest.permission.ACCESS_COARSE_LOCATION
                     ), 1
                 )
 
@@ -95,51 +93,48 @@ class RunFragment : Fragment()
                 Toast.makeText(it,"LOCATION ACCESS PERMISSION REQUIRED", Toast.LENGTH_SHORT).show()
                 return
             }
+        }
 
-            startLocationListener = object : LocationListener {
-                override fun onLocationChanged(p0: Location) {
-                    startLongitude = p0.longitude
-                    startLatitude = p0.latitude
+        startLocationListener = object : LocationListener {
+            override fun onLocationChanged(p0: Location) {
+                startLongitude = p0.longitude
+                startLatitude = p0.latitude
 
-                    // Once we have a location, we can remove the listener
-                    if(startLatitude > 0 || startLatitude < 0  && startLongitude > 0 || startLongitude < 0)
-                    {
-                        Log.d("Start Run", "Location Acquired, Removing Listener")
-                        locationManager?.removeUpdates(startLocationListener!!)
-                    }
+                // Once we have a location, we can remove the listener
+                if(startLatitude > 0 || startLatitude < 0  && startLongitude > 0 || startLongitude < 0)
+                {
+                    Log.d("Start Run", "Location Acquired, Removing Listener")
+                    locationManager?.removeUpdates(startLocationListener!!)
                 }
             }
-
-            locationManager?.requestLocationUpdates(
-                LocationManager.NETWORK_PROVIDER,
-                5000,
-                0f,
-                startLocationListener!!)
-
-            startTime = System.currentTimeMillis()
-            runTimeTextView?.text = getString(R.string.shared_single_value_int, 0)
         }
+
+        locationManager?.requestLocationUpdates(
+            LocationManager.NETWORK_PROVIDER,
+            5000,
+            0f,
+            startLocationListener!!)
+
+        startTime = System.currentTimeMillis()
+        runTimeTextView?.text = getString(R.string.shared_single_value_int, 0)
     }
 
+    //Added Suppress Here as even though we request the permissions before adding listeners it
+    //complained about not having them
+    @SuppressLint("MissingPermission")
     private fun stopRun()
     {
         activity?.let {
-            if (ActivityCompat.checkSelfPermission(
-                    it,
-                    android.Manifest.permission.ACCESS_COARSE_LOCATION
-                )
-                != PackageManager.PERMISSION_GRANTED ||
-                ActivityCompat.checkSelfPermission(
-                    it,
-                    android.Manifest.permission.ACCESS_FINE_LOCATION
-                )
-                != PackageManager.PERMISSION_GRANTED
-            ) {
+            if (ActivityCompat.checkSelfPermission(it, android.Manifest.permission.ACCESS_FINE_LOCATION)
+                != PackageManager.PERMISSION_GRANTED &&
+                ActivityCompat.checkSelfPermission(it, android.Manifest.permission.ACCESS_COARSE_LOCATION)
+                != PackageManager.PERMISSION_GRANTED)
+            {
                 // User has not granted permissions so request the permission and return
                 requestPermissions(
                     arrayOf(
-                        android.Manifest.permission.ACCESS_COARSE_LOCATION,
-                        android.Manifest.permission.ACCESS_FINE_LOCATION
+                        android.Manifest.permission.ACCESS_FINE_LOCATION,
+                        android.Manifest.permission.ACCESS_COARSE_LOCATION
                     ), 1
                 )
 
@@ -160,7 +155,7 @@ class RunFragment : Fragment()
                     Log.d("Stop Run", "Location Acquired, Removing Listener")
 
                     //Only calculate distance once we have received the end location
-                    var distance = calculateTotalDistance(startLatitude, endLatitude, startLongitude,
+                    val distance = calculateTotalDistance(startLatitude, endLatitude, startLongitude,
                         endLongitude)
 
                     totalDistanceTextView?.text = getString(R.string.distance_value, distance)
@@ -201,23 +196,23 @@ class RunFragment : Fragment()
     private fun calculateTotalDistance(startLat: Double, endLat: Double, startLon: Double, endLon: Double) : Double
     {
         // Convert from degrees to radians
-        var startLatRad = Math.toRadians(startLat)
-        var endLatRad = Math.toRadians(endLat)
-        var startLonRad = Math.toRadians(startLon)
-        var endLonRad = Math.toRadians(endLon)
+        val startLatRad = Math.toRadians(startLat)
+        val endLatRad = Math.toRadians(endLat)
+        val startLonRad = Math.toRadians(startLon)
+        val endLonRad = Math.toRadians(endLon)
 
         // Haversine Formula
-        var dLat = endLatRad - startLatRad
-        var dLon = endLonRad - startLonRad
+        val dLat = endLatRad - startLatRad
+        val dLon = endLonRad - startLonRad
 
-        var a = sin(dLat / 2).pow(2.0) +
+        val a = sin(dLat / 2).pow(2.0) +
                 cos(startLatRad) * cos(endLatRad) *
                 sin(dLon / 2).pow(2.0)
 
-        var c = 2 * asin(sqrt(a))
+        val c = 2 * asin(sqrt(a))
 
         // Radius of earth is 6371 km
-        var r = 6371
+        val r = 6371
 
         totalDistanceCovered = c * r
 
