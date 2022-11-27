@@ -1,6 +1,5 @@
 package exercise_planner
 
-import android.annotation.SuppressLint
 import android.content.Context
 import android.content.pm.PackageManager
 import android.location.Location
@@ -70,9 +69,6 @@ class RunFragment : Fragment()
         stopRunBtn?.setOnClickListener { stopRun()  }
     }
 
-    //Added Suppress Here as even though we request the permissions before adding listeners it
-    //complained about not having them
-    @SuppressLint("MissingPermission")
     private fun startRun()
     {
         activity?.let{
@@ -119,9 +115,6 @@ class RunFragment : Fragment()
         runTimeTextView?.text = getString(R.string.shared_single_value_int, 0)
     }
 
-    //Added Suppress Here as even though we request the permissions before adding listeners it
-    //complained about not having them
-    @SuppressLint("MissingPermission")
     private fun stopRun()
     {
         activity?.let {
