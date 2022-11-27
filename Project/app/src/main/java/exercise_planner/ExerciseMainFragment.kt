@@ -67,10 +67,10 @@ class ExerciseMainFragment : Fragment(), SensorEventListener
         goToRunFragButton?.setOnClickListener { goToRunFragment() }
 
         averageHeartRateText = view?.findViewById(R.id.averageHeartRate)
-        averageHeartRateText?.text = getString(R.string.shared_single_value_int, 0)
+        averageHeartRateText?.text = getString(R.string.shared_single_value_int, 73)
 
         calorieBurnedText = view?.findViewById(R.id.caloriesBurned)
-        calorieBurnedText?.text = getString(R.string.shared_single_value_dec, 0.0)
+        calorieBurnedText?.text = getString(R.string.shared_single_value_dec, 300.5)
     }
 
     override fun onResume() {
@@ -99,7 +99,7 @@ class ExerciseMainFragment : Fragment(), SensorEventListener
                     return
                 }
 
-                sensorManager?.registerListener(this, stepSensor, SensorManager.SENSOR_DELAY_UI)
+                sensorManager?.registerListener(this, stepSensor, SensorManager.SENSOR_DELAY_FASTEST)
                 Log.d("Exercise Fragment", "Registering Listener to Step Sensor")
             }
         }
