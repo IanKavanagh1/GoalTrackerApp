@@ -12,6 +12,7 @@ import android.view.ViewGroup
 import android.widget.Button
 import com.example.goal_tracker.R
 import com.example.goal_tracker.databinding.FragmentGoalManagmentBinding
+import exercise_planner.RunFragment
 
 class GoalManagementFragment : Fragment()
 {
@@ -63,7 +64,7 @@ class GoalManagementFragment : Fragment()
     private fun goBackToCreationUI()
     {
         activity?.let {
-            it.supportFragmentManager?.beginTransaction()?.replace(R.id.frameLayout, GoalCreationFragment(), "")
+            it.supportFragmentManager?.beginTransaction()?.replace(R.id.frameLayout, RunFragment(), "")
                 ?.addToBackStack("null")?.commit()
         }
     }
