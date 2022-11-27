@@ -45,8 +45,8 @@ class MainActivity : AppCompatActivity()
         super.onStart()
 
         //Check if user has any goals
-        var sharedPreferences = getSharedPreferences(Consts.USER_PREFS, AppCompatActivity.MODE_PRIVATE)
-        var userId = sharedPreferences.getInt("userId", -1)
+        var sharedPreferences = getSharedPreferences(Consts.USER_PREFS, MODE_PRIVATE)
+        var userId = sharedPreferences.getInt(Consts.PREFS_USER_ID, -1)
 
         var userGoals = goalManager?.fetchGoals(userId)
 

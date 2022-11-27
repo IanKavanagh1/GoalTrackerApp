@@ -130,6 +130,7 @@ class ExerciseMainFragment : Fragment(), SensorEventListener
         saveData()
     }
 
+    //TODO: Review how we are saving data from sensors
     private fun saveData()
     {
         activity?.let {

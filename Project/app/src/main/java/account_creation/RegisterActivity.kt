@@ -67,12 +67,12 @@ class RegisterActivity : AppCompatActivity()
                     var editor = sharedPreferences.edit()
 
                     editor.apply {
-                        putBoolean("loggedIn", true)
-                        remove("userId")
+                        putBoolean(Consts.PREFS_LOGGED_IN, true)
+                        remove(Consts.PREFS_USER_ID)
                         val id = AccountManager.getUserId(userEmail,userPassword)
-                        putInt("userId", id)
-                        remove("userDisplayName")
-                        putString("userDisplayName", AccountManager.getUserDisplayName(id))
+                        putInt(Consts.PREFS_USER_ID, id)
+                        remove(Consts.PREFS_USER_DISPLAY_NAME)
+                        putString(Consts.PREFS_USER_DISPLAY_NAME, AccountManager.getUserDisplayName(id))
                     }.apply()
 
                     var intent = Intent(this, MainActivity::class.java)

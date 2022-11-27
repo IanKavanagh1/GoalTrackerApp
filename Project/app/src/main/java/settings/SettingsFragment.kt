@@ -11,12 +11,11 @@ import android.view.ViewGroup
 import android.widget.Button
 import com.example.goal_tracker.R
 import com.example.goal_tracker.databinding.FragmentSettingsBinding
+import shared.Consts
 
 class SettingsFragment : Fragment()
 {
     private var logOutButton: Button? = null
-
-    private val USER_PREFS = "user_prefs"
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -39,11 +38,11 @@ class SettingsFragment : Fragment()
     private fun logOut()
     {
         activity?.let {
-            var sharedPreferences = it.getSharedPreferences(USER_PREFS, AppCompatActivity.MODE_PRIVATE)
+            var sharedPreferences = it.getSharedPreferences(Consts.USER_PREFS, AppCompatActivity.MODE_PRIVATE)
             var editor = sharedPreferences.edit()
 
             editor.apply {
-                putBoolean("loggedIn", false)
+                putBoolean(Consts.PREFS_LOGGED_IN, false)
             }.apply()
 
             var intent = Intent(it, LoginActivity::class.java)

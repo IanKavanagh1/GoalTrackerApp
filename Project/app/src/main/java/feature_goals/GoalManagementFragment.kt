@@ -46,9 +46,8 @@ class GoalManagementFragment : Fragment()
 
             var sharedPreferences = it.getSharedPreferences(Consts.USER_PREFS, AppCompatActivity.MODE_PRIVATE)
 
-            //TODO: Add all user pref variables to const file
-            var userId = sharedPreferences.getInt("userId", -1)
-            val savedUserDisplayName = sharedPreferences.getString("userDisplayName", "")
+            var userId = sharedPreferences.getInt(Consts.PREFS_USER_ID, -1)
+            val savedUserDisplayName = sharedPreferences.getString(Consts.PREFS_USER_DISPLAY_NAME, "")
 
             welcomeBackTextView?.text = getString(R.string.welcome_back_label, savedUserDisplayName)
 
