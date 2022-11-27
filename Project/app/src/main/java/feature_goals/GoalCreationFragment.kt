@@ -13,6 +13,7 @@ import android.widget.ImageView
 import android.widget.Spinner
 import com.example.goal_tracker.R
 import com.example.goal_tracker.databinding.FragmentGoalCreationBinding
+import shared.Consts
 
 class GoalCreationFragment : Fragment()
 {
@@ -24,8 +25,6 @@ class GoalCreationFragment : Fragment()
     private var createGoalButton: Button? = null
 
     private var adapter: ArrayAdapter<GoalTypes>? = null
-
-    private val USER_PREFS = "user_prefs"
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -67,7 +66,7 @@ class GoalCreationFragment : Fragment()
         var goalTarget = goalTargetEditText?.text.toString()
 
         activity?.let {
-            var sharedPreferences = it.getSharedPreferences(USER_PREFS, AppCompatActivity.MODE_PRIVATE)
+            var sharedPreferences = it.getSharedPreferences(Consts.USER_PREFS, AppCompatActivity.MODE_PRIVATE)
             var userId = sharedPreferences.getInt("userId", -1)
 
             goalManager?.createGoal(goalType, goalName, goalTarget, userId)

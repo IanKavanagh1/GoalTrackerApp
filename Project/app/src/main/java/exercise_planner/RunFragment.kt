@@ -15,6 +15,7 @@ import android.view.ViewGroup
 import android.widget.Button
 import android.widget.TextView
 import android.widget.Toast
+import com.example.goal_tracker.LoadingDialog
 import com.example.goal_tracker.R
 import com.example.goal_tracker.databinding.FragmentRunBinding
 import java.math.RoundingMode
@@ -43,6 +44,8 @@ class RunFragment : Fragment()
     private var startLocationListener: LocationListener? = null
     private var endLocationListener: LocationListener? = null
 
+    private lateinit var loadingDialog: LoadingDialog
+
     override fun onCreateView( inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?): View {
         val binding = FragmentRunBinding.inflate(layoutInflater, container, false)
@@ -54,6 +57,7 @@ class RunFragment : Fragment()
 
         activity?.let {
             locationManager = it.getSystemService(Context.LOCATION_SERVICE) as LocationManager
+            loadingDialog = LoadingDialog(it)
         }
 
         startRunBtn = view?.findViewById(R.id.startRunBtn)
@@ -117,6 +121,9 @@ class RunFragment : Fragment()
 
     private fun stopRun()
     {
+        // Start Loading Dialog
+        loadingDialog.startLoadingDialog()
+
         activity?.let {
             if (ActivityCompat.checkSelfPermission(it, android.Manifest.permission.ACCESS_FINE_LOCATION)
                 != PackageManager.PERMISSION_GRANTED &&
@@ -154,6 +161,9 @@ class RunFragment : Fragment()
                     totalDistanceTextView?.text = getString(R.string.distance_value, distance)
 
                     locationManager?.removeUpdates(endLocationListener!!)
+
+                    // Remove Loading Dialog
+                    loadingDialog.dismissDialog()
                 }
             }
         }

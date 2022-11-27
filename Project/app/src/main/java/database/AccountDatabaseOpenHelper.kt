@@ -9,6 +9,7 @@ import android.util.Log
 class AccountDatabaseOpenHelper(context: Context, name: String, factory: SQLiteDatabase.CursorFactory?,
                              version: Int) : SQLiteOpenHelper(context, name, factory, version)
 {
+    // TODO: Use database name from Const File
     private val CREATE_TABLE :String = "CREATE TABLE users_test(" +
             "ID integer PRIMARY KEY AUTOINCREMENT,"+
             "USER_EMAIL string," +
@@ -86,5 +87,19 @@ class AccountDatabaseOpenHelper(context: Context, name: String, factory: SQLiteD
             return cursor.getInt(0)
         }
         return -1
+    }
+
+    public fun getUserDisplayName(userId: Int) : String
+    {
+        var id = arrayOf(userId.toString())
+        var cursor = rb.rawQuery("SELECT * FROM users_test WHERE ID = ? ", id)
+
+        cursor.moveToFirst()
+        for(i in 0 until cursor.count)
+        {
+            Log.d("AccountDatabase","User Display Name for Logged In User Is ${cursor.getString(3)}")
+            return cursor.getString(3)
+        }
+        return ""
     }
 }

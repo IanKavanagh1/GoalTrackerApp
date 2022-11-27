@@ -5,30 +5,36 @@ import database.AccountDatabaseOpenHelper
 
 object AccountManager
 {
-    private lateinit var testDatabaseOpenHelper: AccountDatabaseOpenHelper
+    private lateinit var accountDatabaseOpenHelper: AccountDatabaseOpenHelper
 
     public fun setUpDatabase(context: Context)
     {
-        testDatabaseOpenHelper = AccountDatabaseOpenHelper( context, "users_test.db", null, 1)
+        //TODO: Use database name from const file
+        accountDatabaseOpenHelper = AccountDatabaseOpenHelper( context, "users_test.db", null, 1)
     }
 
     public fun createAccount(userEmail: String, userPassword: String, userDisplayName: String) : Boolean
     {
-        return testDatabaseOpenHelper.insertData(userEmail, userPassword, userDisplayName)
+        return accountDatabaseOpenHelper.insertData(userEmail, userPassword, userDisplayName)
     }
 
     public fun getUserId(userEmail: String, userPassword: String) : Int
     {
-        return testDatabaseOpenHelper.getUserId(userEmail, userPassword)
+        return accountDatabaseOpenHelper.getUserId(userEmail, userPassword)
+    }
+
+    public fun getUserDisplayName(userId: Int) : String
+    {
+        return accountDatabaseOpenHelper.getUserDisplayName(userId)
     }
 
     public fun checkUser(userEmail: String) : Boolean
     {
-        return testDatabaseOpenHelper.checkUserName(userEmail)
+        return accountDatabaseOpenHelper.checkUserName(userEmail)
     }
 
     public fun checkUserEmailAndPassword(userEmail: String, userPassword: String) : Boolean
     {
-        return testDatabaseOpenHelper.checkUserNameAndPassword(userEmail, userPassword)
+        return accountDatabaseOpenHelper.checkUserNameAndPassword(userEmail, userPassword)
     }
 }

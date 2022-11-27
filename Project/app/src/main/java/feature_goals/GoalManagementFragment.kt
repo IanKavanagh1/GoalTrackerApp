@@ -10,9 +10,10 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
+import android.widget.TextView
 import com.example.goal_tracker.R
 import com.example.goal_tracker.databinding.FragmentGoalManagmentBinding
-import exercise_planner.RunFragment
+import shared.Consts
 
 class GoalManagementFragment : Fragment()
 {
@@ -20,9 +21,8 @@ class GoalManagementFragment : Fragment()
     private var goalListView: RecyclerView? = null
     private var adapter: GoalRecyclerViewAdapter? = null
     private var layoutManager: LinearLayoutManager? = null
-    private var backButton: Button? = null
-
-    private val USER_PREFS = "user_prefs"
+    private var addGoalBtn: Button? = null
+    private var welcomeBackTextView: TextView? = null
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -33,16 +33,27 @@ class GoalManagementFragment : Fragment()
         return binding.root
     }
 
-    override fun onStart() {
+    override fun onStart()
+    {
         super.onStart()
+
+        welcomeBackTextView = view?.findViewById(R.id.welcomeBackTV)
+        addGoalBtn = view?.findViewById(R.id.addGoalBtn)
+        goalListView = view?.findViewById(R.id.goal_recycler_view)
 
         activity?.let {
             goalManager = GoalManager(it)
 
-            var sharedPreferences = it.getSharedPreferences(USER_PREFS, AppCompatActivity.MODE_PRIVATE)
+            var sharedPreferences = it.getSharedPreferences(Consts.USER_PREFS, AppCompatActivity.MODE_PRIVATE)
+
+            //TODO: Add all user pref variables to const file
             var userId = sharedPreferences.getInt("userId", -1)
+            val savedUserDisplayName = sharedPreferences.getString("userDisplayName", "")
+
+            welcomeBackTextView?.text = getString(R.string.welcome_back_label, savedUserDisplayName)
 
             Log.d("GoalManagement","Local User Id is $userId")
+            Log.d("GoalManagement","Local User Display Name is $savedUserDisplayName")
 
             var userGoals = goalManager?.fetchGoals(userId)
 
@@ -51,21 +62,17 @@ class GoalManagementFragment : Fragment()
             layoutManager = LinearLayoutManager(it)
         }
 
-        backButton = view?.findViewById(R.id.backBtn)
-
-        backButton?.setOnClickListener {  goBackToCreationUI() }
-
-        goalListView = view?.findViewById(R.id.goal_recycler_view)
-
         goalListView?.adapter = adapter
         goalListView?.layoutManager = layoutManager
+
+        addGoalBtn?.setOnClickListener { goToCreationUI() }
     }
 
-    private fun goBackToCreationUI()
+    private fun goToCreationUI()
     {
         activity?.let {
-            it.supportFragmentManager?.beginTransaction()?.replace(R.id.frameLayout, RunFragment(), "")
-                ?.addToBackStack("null")?.commit()
+            it.supportFragmentManager?.beginTransaction()?.replace(R.id.frameLayout, GoalCreationFragment(), "")
+                ?.addToBackStack("true")?.commit()
         }
     }
 }
