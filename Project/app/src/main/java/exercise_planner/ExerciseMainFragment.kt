@@ -70,7 +70,7 @@ class ExerciseMainFragment : Fragment(), SensorEventListener
         averageHeartRateText?.text = getString(R.string.shared_single_value_int, 73)
 
         calorieBurnedText = view?.findViewById(R.id.caloriesBurned)
-        calorieBurnedText?.text = getString(R.string.shared_single_value_dec, 300.5)
+        calorieBurnedText?.text = getString(R.string.calorie_value, 300.5)
     }
 
     override fun onResume() {

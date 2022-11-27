@@ -70,7 +70,7 @@
             android:layout_centerInParent="true"
             android:layout_marginStart="16dp"
             android:layout_marginTop="272dp"
-            android:text="@string/shared_single_value_dec"
+            android:text="@string/calorie_value"
             android:textSize="40sp"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
