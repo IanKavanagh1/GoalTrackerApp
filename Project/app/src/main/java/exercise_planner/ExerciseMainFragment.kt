@@ -19,12 +19,14 @@ import android.widget.TextView
 import android.widget.Toast
 import com.example.goal_tracker.R
 import com.example.goal_tracker.databinding.FragmentExerciseMainBinding
+import database.HeartRateDatabaseOpenHelper
 import shared.Consts
 
 class ExerciseMainFragment : Fragment(), SensorEventListener
 {
     private var sensorManager: SensorManager? = null
     private var running = false
+    private var heartRateDatabaseOpenHelper: HeartRateDatabaseOpenHelper? = null
 
     // Step Sensor Variables
     private var totalSteps = 0f
@@ -56,6 +58,9 @@ class ExerciseMainFragment : Fragment(), SensorEventListener
 
         activity?.let {
             sensorManager = it.getSystemService(Context.SENSOR_SERVICE) as SensorManager
+
+            //TODO: Replace name with const from Const file
+            heartRateDatabaseOpenHelper = HeartRateDatabaseOpenHelper(it, "heart_rate_test.db", null, 1)
         }
 
         stepCounterText = view?.findViewById(R.id.stepCounter)
@@ -67,7 +72,7 @@ class ExerciseMainFragment : Fragment(), SensorEventListener
         goToRunFragButton?.setOnClickListener { goToRunFragment() }
 
         averageHeartRateText = view?.findViewById(R.id.averageHeartRate)
-        averageHeartRateText?.text = getString(R.string.shared_single_value_int, 73)
+        averageHeartRateText?.text = getString(R.string.shared_single_value_int, calculateAverageHeartRate())
 
         calorieBurnedText = view?.findViewById(R.id.caloriesBurned)
         calorieBurnedText?.text = getString(R.string.calorie_value, 300.5)
@@ -201,5 +206,26 @@ class ExerciseMainFragment : Fragment(), SensorEventListener
                 }
             }
         }
+    }
+
+    private fun calculateAverageHeartRate() : Int
+    {
+        activity?.let {
+            var sharedPreferences = it.getSharedPreferences(Consts.USER_PREFS, AppCompatActivity.MODE_PRIVATE)
+            var userId = sharedPreferences.getInt(Consts.PREFS_USER_ID, -1)
+
+            val data = heartRateDatabaseOpenHelper?.getUserHeartRateData(userId)
+
+            var averageHeartRate = 0
+
+            for(i in 0 until data!!.size)
+            {
+                averageHeartRate += data[i]
+            }
+
+            return averageHeartRate / data.size
+        }
+
+        return 0
     }
 }

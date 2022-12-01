@@ -7,6 +7,7 @@ import android.hardware.SensorEventListener
 import android.hardware.SensorManager
 import android.os.Bundle
 import android.support.v4.app.Fragment
+import android.support.v7.app.AppCompatActivity
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -15,6 +16,8 @@ import android.widget.TextView
 import android.widget.Toast
 import com.example.goal_tracker.R
 import com.example.goal_tracker.databinding.FragmentHeartBeatMonitorBinding
+import database.HeartRateDatabaseOpenHelper
+import shared.Consts
 
 class HeartBeatMonitorFragment : Fragment(), SensorEventListener
 {
@@ -23,6 +26,10 @@ class HeartBeatMonitorFragment : Fragment(), SensorEventListener
     // Heartbeat Sensor Variables
     private var heartRateSensor: Sensor? = null
     private var heartRateText: TextView? = null
+
+    private var heartRateDatabaseOpenHelper: HeartRateDatabaseOpenHelper? = null
+
+    private var userId = 0
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -39,6 +46,13 @@ class HeartBeatMonitorFragment : Fragment(), SensorEventListener
 
         activity?.let {
             sensorManager = it.getSystemService(Context.SENSOR_SERVICE) as SensorManager
+
+            //TODO: Replace name with const from Const file
+            heartRateDatabaseOpenHelper = HeartRateDatabaseOpenHelper(it, "heart_rate_test.db", null, 1)
+
+            var sharedPreferences = it.getSharedPreferences(Consts.USER_PREFS, AppCompatActivity.MODE_PRIVATE)
+
+            userId = sharedPreferences.getInt(Consts.PREFS_USER_ID, -1)
         }
 
         heartRateText = view?.findViewById(R.id.currentHeartRateText)
@@ -76,6 +90,8 @@ class HeartBeatMonitorFragment : Fragment(), SensorEventListener
         val currentHeartRate = event!!.values[0].toInt()
         heartRateText?.text = getString(R.string.shared_single_value_int, currentHeartRate)
         Log.d("Exercise Fragment", "Current Heart Rate : $currentHeartRate")
+
+        heartRateDatabaseOpenHelper?.insertData(currentHeartRate, userId)
     }
 
     override fun onAccuracyChanged(p0: Sensor?, p1: Int) {
