@@ -4,6 +4,7 @@ import android.content.Context
 import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
 
+//TODO: Update file to follow update pattern like Accounts and other databases used in the app
 class GoalDatabaseOpenHelper(context: Context, name: String, factory: SQLiteDatabase.CursorFactory?,
                              version: Int) : SQLiteOpenHelper(context, name, factory, version)
 {
