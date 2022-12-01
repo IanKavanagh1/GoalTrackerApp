@@ -53,7 +53,7 @@ class HeartRateDatabaseOpenHelper(context: Context, name: String, factory: SQLit
     public fun getUserHeartRateData(userId: Int) : ArrayList<Int>
     {
         var userID = arrayOf(userId.toString())
-        var cursor = rb.rawQuery("SELECT * FROM heart_rate_test WHERE USER_EMAIL = ? ", userID)
+        var cursor = rb.rawQuery("SELECT * FROM heart_rate_test WHERE USER_ID = ? ", userID)
 
         val userHeartRateData = ArrayList<Int>()
 

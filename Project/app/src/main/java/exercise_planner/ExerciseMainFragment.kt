@@ -128,37 +128,6 @@ class ExerciseMainFragment : Fragment(), SensorEventListener
     override fun onAccuracyChanged(p0: Sensor?, p1: Int) {
     }
 
-    private fun resetData()
-    {
-        previousTotalSteps = totalSteps
-        stepCounterText?.text = getString(R.string.shared_single_value_int, 0)
-        saveData()
-    }
-
-    //TODO: Review how we are saving data from sensors
-    private fun saveData()
-    {
-        activity?.let {
-            var sharedPreferences = it.getSharedPreferences(Consts.USER_PREFS, AppCompatActivity.MODE_PRIVATE)
-            var editor = sharedPreferences.edit()
-
-            editor.apply {
-                putFloat("steps", previousTotalSteps)
-            }.apply()
-        }
-    }
-
-    private fun loadData()
-    {
-        activity?.let {
-            var sharedPreferences = it.getSharedPreferences(Consts.USER_PREFS, AppCompatActivity.MODE_PRIVATE)
-
-            val savedStepCount = sharedPreferences.getFloat("steps", 0f)
-            Log.d("Exercise", "Saved Steps : $savedStepCount")
-            previousTotalSteps = savedStepCount
-        }
-    }
-
     private fun goToCheckHeartRateFragment()
     {
         activity?.let {

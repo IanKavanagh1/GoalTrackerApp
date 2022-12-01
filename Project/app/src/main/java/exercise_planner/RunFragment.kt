@@ -8,6 +8,7 @@ import android.location.LocationManager
 import android.os.Bundle
 import android.support.v4.app.ActivityCompat
 import android.support.v4.app.Fragment
+import android.support.v7.app.AppCompatActivity
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -18,6 +19,8 @@ import android.widget.Toast
 import com.example.goal_tracker.LoadingDialog
 import com.example.goal_tracker.R
 import com.example.goal_tracker.databinding.FragmentRunBinding
+import database.ExerciseDatabaseOpenHelper
+import shared.Consts
 import java.math.RoundingMode
 import java.util.concurrent.TimeUnit
 import kotlin.math.*
@@ -44,6 +47,10 @@ class RunFragment : Fragment()
     private var startLocationListener: LocationListener? = null
     private var endLocationListener: LocationListener? = null
 
+    private var exerciseDatabaseOpenHelper: ExerciseDatabaseOpenHelper? = null
+
+    private var userId = 0
+
     private lateinit var loadingDialog: LoadingDialog
 
     override fun onCreateView( inflater: LayoutInflater, container: ViewGroup?,
@@ -58,6 +65,12 @@ class RunFragment : Fragment()
         activity?.let {
             locationManager = it.getSystemService(Context.LOCATION_SERVICE) as LocationManager
             loadingDialog = LoadingDialog(it)
+
+            //TODO: Replace name with const from Const file
+            exerciseDatabaseOpenHelper = ExerciseDatabaseOpenHelper(it, "exercise_database_test", null, 1)
+
+            var sharedPreferences = it.getSharedPreferences(Consts.USER_PREFS, AppCompatActivity.MODE_PRIVATE)
+            userId = sharedPreferences.getInt(Consts.PREFS_USER_ID, -1)
         }
 
         startRunBtn = view?.findViewById(R.id.startRunBtn)
@@ -158,9 +171,15 @@ class RunFragment : Fragment()
                     val distance = calculateTotalDistance(startLatitude, endLatitude, startLongitude,
                         endLongitude)
 
+                    // Display the total distance covered
                     totalDistanceTextView?.text = getString(R.string.distance_value, distance)
 
+                    // Unsubscribe from event listener
                     locationManager?.removeUpdates(endLocationListener!!)
+
+                    // Add data to database
+                    exerciseDatabaseOpenHelper?.insertData(startLatitude, startLongitude, endLatitude,
+                        endLongitude, distance, totalRunTime, userId)
 
                     // Remove Loading Dialog
                     loadingDialog.dismissDialog()
@@ -174,21 +193,26 @@ class RunFragment : Fragment()
             0f,
             endLocationListener!!)
 
+        // Work out the total time it took for the run
         endTime = System.currentTimeMillis()
         totalRunTime = endTime - startTime
 
+        // Breakdown and display the time into Hours, Minutes and Seconds
         val hours = TimeUnit.MILLISECONDS.toHours(totalRunTime) % 24
         val minutes = TimeUnit.MILLISECONDS.toMinutes(totalRunTime) % 60
         val seconds = TimeUnit.MILLISECONDS.toSeconds(totalRunTime) % 60
 
+        // Only display what is needed, i.e if hours and minutes are 0 only so seconds
         if(hours == 0L && minutes == 0L)
         {
             runTimeTextView?.text = getString(R.string.time_seconds_formatter, seconds)
         }
+        // only show minutes and seconds
         else if(hours == 0L && minutes > 0L)
         {
             runTimeTextView?.text = getString(R.string.time_minutes_seconds_formatter, minutes, seconds)
         }
+        // show hours minutes and seconds
         else
         {
             runTimeTextView?.text = getString(R.string.time_hours_minutes_seconds_formatter, hours,
@@ -196,6 +220,8 @@ class RunFragment : Fragment()
         }
     }
 
+    // Function to workout the total distance between the start and end location
+    // using the latitude and longitude values received from the sensors
     private fun calculateTotalDistance(startLat: Double, endLat: Double, startLon: Double, endLon: Double) : Double
     {
         // Convert from degrees to radians
