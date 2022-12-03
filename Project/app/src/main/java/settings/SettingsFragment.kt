@@ -22,9 +22,9 @@ class SettingsFragment : Fragment()
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
 
-        var binding = FragmentSettingsBinding.inflate(inflater, container, false)
+        val binding = FragmentSettingsBinding.inflate(inflater, container, false)
 
         return binding.root
     }
@@ -43,14 +43,14 @@ class SettingsFragment : Fragment()
     private fun logOut()
     {
         activity?.let {
-            var sharedPreferences = it.getSharedPreferences(Consts.USER_PREFS, AppCompatActivity.MODE_PRIVATE)
-            var editor = sharedPreferences.edit()
+            val sharedPreferences = it.getSharedPreferences(Consts.USER_PREFS, AppCompatActivity.MODE_PRIVATE)
+            val editor = sharedPreferences.edit()
 
             editor.apply {
                 putBoolean(Consts.PREFS_LOGGED_IN, false)
             }.apply()
 
-            var intent = Intent(it, LoginActivity::class.java)
+            val intent = Intent(it, LoginActivity::class.java)
             startActivity(intent)
             it.finish()
         }

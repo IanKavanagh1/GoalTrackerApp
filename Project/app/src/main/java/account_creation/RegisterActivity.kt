@@ -63,9 +63,10 @@ class RegisterActivity : AppCompatActivity()
                 {
                     Toast.makeText(this, "Registration Successful!", Toast.LENGTH_SHORT).show()
 
-                    var sharedPreferences = getSharedPreferences(Consts.USER_PREFS, MODE_PRIVATE)
-                    var editor = sharedPreferences.edit()
+                    val sharedPreferences = getSharedPreferences(Consts.USER_PREFS, MODE_PRIVATE)
+                    val editor = sharedPreferences.edit()
 
+                    //TODO: Pass the User Account details to the MainActivity via Explicit Intent
                     editor.apply {
                         putBoolean(Consts.PREFS_LOGGED_IN, true)
                         remove(Consts.PREFS_USER_ID)
@@ -75,8 +76,7 @@ class RegisterActivity : AppCompatActivity()
                         putString(Consts.PREFS_USER_DISPLAY_NAME, AccountManager.getUserDisplayName(id))
                     }.apply()
 
-                    var intent = Intent(this, MainActivity::class.java)
-                    startActivity(intent)
+                    goToMainActivity()
                 }
                 else
                 {
@@ -88,7 +88,14 @@ class RegisterActivity : AppCompatActivity()
 
     private fun goToLoginActivity()
     {
-        var intent = Intent(this, LoginActivity::class.java)
+        val intent = Intent(this, LoginActivity::class.java)
+        startActivity(intent)
+        finish()
+    }
+
+    private fun goToMainActivity()
+    {
+        val intent = Intent(this, MainActivity::class.java)
         startActivity(intent)
         finish()
     }

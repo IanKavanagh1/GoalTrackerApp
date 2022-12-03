@@ -13,4 +13,7 @@ object Consts
     const val GOAL_DATABASE = "goal_database"
     const val HEART_RATE_DATABASE = "hear_rate_database"
     const val EXERCISE_DATABASE = "exercise_database"
+
+    // Fragment Arguments
+    const val USER_GOALS = "user_goals"
 }

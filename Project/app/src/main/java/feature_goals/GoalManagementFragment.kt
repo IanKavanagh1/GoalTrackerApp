@@ -5,7 +5,6 @@ import android.support.v4.app.Fragment
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -24,12 +23,15 @@ class GoalManagementFragment : Fragment()
     private var addGoalBtn: Button? = null
     private var welcomeBackTextView: TextView? = null
 
+    private var userGoals : ArrayList<GoalDataModel>? = null
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
 
         val binding = FragmentGoalManagmentBinding.inflate(inflater, container, false)
+
         return binding.root
     }
 
@@ -44,17 +46,12 @@ class GoalManagementFragment : Fragment()
         activity?.let {
             goalManager = GoalManager(it)
 
-            var sharedPreferences = it.getSharedPreferences(Consts.USER_PREFS, AppCompatActivity.MODE_PRIVATE)
-
-            var userId = sharedPreferences.getInt(Consts.PREFS_USER_ID, -1)
+            val sharedPreferences = it.getSharedPreferences(Consts.USER_PREFS, AppCompatActivity.MODE_PRIVATE)
             val savedUserDisplayName = sharedPreferences.getString(Consts.PREFS_USER_DISPLAY_NAME, "")
 
             welcomeBackTextView?.text = getString(R.string.welcome_back_label, savedUserDisplayName)
 
-            Log.d("GoalManagement","Local User Id is $userId")
-            Log.d("GoalManagement","Local User Display Name is $savedUserDisplayName")
-
-            var userGoals = goalManager?.fetchGoals(userId)
+            userGoals = arguments?.getSerializable(Consts.USER_GOALS) as ArrayList<GoalDataModel>
 
             adapter = userGoals?.let{ it1 -> GoalRecyclerViewAdapter(it, it1) }
 
@@ -71,7 +68,7 @@ class GoalManagementFragment : Fragment()
     {
         activity?.let {
             it.supportFragmentManager?.beginTransaction()?.replace(R.id.frameLayout, GoalCreationFragment(), "")
-                ?.addToBackStack("true")?.commit()
+                ?.addToBackStack("null")?.commit()
         }
     }
 }
