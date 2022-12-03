@@ -29,8 +29,7 @@ class LoginActivity : AppCompatActivity()
 
         if(checkIfUserIsLoggedIn())
         {
-            var intent = Intent(this, MainActivity::class.java)
-            startActivity(intent)
+            goToMainActivity()
         }
 
         loginButton = findViewById(R.id.login)
@@ -59,9 +58,10 @@ class LoginActivity : AppCompatActivity()
             {
                 Toast.makeText(this, "Login Successful!", Toast.LENGTH_SHORT).show()
 
-                var sharedPreferences = getSharedPreferences(Consts.USER_PREFS, MODE_PRIVATE)
-                var editor = sharedPreferences.edit()
+                val sharedPreferences = getSharedPreferences(Consts.USER_PREFS, MODE_PRIVATE)
+                val editor = sharedPreferences.edit()
 
+                //TODO: Pass the User Account details to the MainActivity via Explicit Intent
                 editor.apply {
                     putBoolean(Consts.PREFS_LOGGED_IN, true)
                     remove(Consts.PREFS_USER_ID)
@@ -71,8 +71,7 @@ class LoginActivity : AppCompatActivity()
                     putString(Consts.PREFS_USER_DISPLAY_NAME, AccountManager.getUserDisplayName(id))
                 }.apply()
 
-                var intent = Intent(this, MainActivity::class.java)
-                startActivity(intent)
+                goToMainActivity()
             }
             else
             {
@@ -83,14 +82,22 @@ class LoginActivity : AppCompatActivity()
 
     private fun goToRegisterActivity()
     {
-        var intent = Intent(this, RegisterActivity::class.java)
+        val intent = Intent(this, RegisterActivity::class.java)
         startActivity(intent)
+        finishAndRemoveTask()
     }
 
     private fun checkIfUserIsLoggedIn() : Boolean
     {
-        var sharedPreferences = getSharedPreferences(Consts.USER_PREFS, MODE_PRIVATE)
+        val sharedPreferences = getSharedPreferences(Consts.USER_PREFS, MODE_PRIVATE)
 
         return sharedPreferences.getBoolean(Consts.PREFS_LOGGED_IN, false)
+    }
+
+    private fun goToMainActivity()
+    {
+        val intent = Intent(this, MainActivity::class.java)
+        startActivity(intent)
+        finish()
     }
 }

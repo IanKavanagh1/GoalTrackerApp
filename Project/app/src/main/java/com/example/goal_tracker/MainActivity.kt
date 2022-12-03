@@ -15,8 +15,11 @@ import shared.Consts
 
 class MainActivity : AppCompatActivity()
 {
-    var binding: ActivityMainBinding? = null
-    var goalManager: GoalManager? = null
+    private var binding: ActivityMainBinding? = null
+    private var goalManager: GoalManager? = null
+
+    private val goalManagementFragment = GoalManagementFragment()
+    private val goalBundle = Bundle()
 
     override fun onCreate(savedInstanceState: Bundle?)
     {
@@ -27,11 +30,37 @@ class MainActivity : AppCompatActivity()
 
         goalManager = GoalManager(this)
 
+        //Check if user has any goals
+        val sharedPreferences = getSharedPreferences(Consts.USER_PREFS, MODE_PRIVATE)
+        val userId = sharedPreferences.getInt(Consts.PREFS_USER_ID, -1)
+
+        val userGoals = goalManager?.fetchGoals(userId)
+
+        //if they do, bring them to the manage fragment
+        if(userGoals?.isNotEmpty() == true)
+        {
+            Log.d("Main Act","User Has Goals")
+            goalBundle.putSerializable(Consts.USER_GOALS, userGoals)
+            goalManagementFragment.arguments = goalBundle
+            replaceFragment(goalManagementFragment)
+        }
+        //otherwise bring them to the creation fragment
+        else
+        {
+            Log.d("Main Act","User Has No Goals")
+            replaceFragment(GoalCreationFragment())
+        }
+
         binding?.bottomNavigationView?.setOnNavigationItemSelectedListener {
 
             when(it.itemId)
             {
-                R.id.home -> replaceFragment(GoalManagementFragment())
+                R.id.home ->
+                {
+                    goalManagementFragment.arguments = goalBundle
+                    replaceFragment(goalManagementFragment)
+                }
+
                 R.id.meals -> replaceFragment(MealMainFragment())
                 R.id.exercise -> replaceFragment(ExerciseMainFragment())
                 R.id.settings -> replaceFragment(SettingsFragment())
@@ -41,33 +70,9 @@ class MainActivity : AppCompatActivity()
         }
     }
 
-    override fun onStart() {
-        super.onStart()
-
-        //Check if user has any goals
-        var sharedPreferences = getSharedPreferences(Consts.USER_PREFS, MODE_PRIVATE)
-        var userId = sharedPreferences.getInt(Consts.PREFS_USER_ID, -1)
-
-        var userGoals = goalManager?.fetchGoals(userId)
-
-        //if they do, bring them to the manage fragment
-        if(userGoals?.isNotEmpty() == true)
-        {
-            Log.d("Main Act","User Has Goals")
-            replaceFragment(GoalManagementFragment())
-        }
-        //otherwise bring them to the creation fragment
-        else
-        {
-            Log.d("Main Act","User Has No Goals")
-            replaceFragment(GoalCreationFragment())
-        }
-    }
-
     private fun replaceFragment(fragment: Fragment)
     {
-       var fragmentTransaction = supportFragmentManager.beginTransaction()
-        fragmentTransaction.replace(R.id.frameLayout, fragment)
-        fragmentTransaction.commit()
+       val fragmentTransaction = supportFragmentManager.beginTransaction()
+        fragmentTransaction.replace(R.id.frameLayout, fragment).commit()
     }
 }

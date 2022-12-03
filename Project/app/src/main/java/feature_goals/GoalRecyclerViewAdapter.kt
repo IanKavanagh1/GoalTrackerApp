@@ -11,12 +11,12 @@ import com.example.goal_tracker.R
 
 class GoalRecyclerViewAdapter(context: Context, goalData: ArrayList<GoalDataModel> ) : RecyclerView.Adapter<GoalRecyclerViewAdapter.GoalViewHolder>()
 {
-    var data = goalData
-    var cont = context
+    private var data = goalData
+    private var cont = context
 
     override fun onCreateViewHolder(p0: ViewGroup, p1: Int): GoalViewHolder {
-        var inflater = LayoutInflater.from(cont)
-        var view = inflater.inflate(R.layout.goal_recycler_item, p0, false)
+        val inflater = LayoutInflater.from(cont)
+        val view = inflater.inflate(R.layout.goal_recycler_item, p0, false)
 
         return GoalViewHolder(view)
     }
@@ -34,9 +34,8 @@ class GoalRecyclerViewAdapter(context: Context, goalData: ArrayList<GoalDataMode
 
     class GoalViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView)
     {
-        var goalIconView = itemView.findViewById<ImageView>(R.id.goal_icon)
-        var goalNameText = itemView.findViewById<TextView>(R.id.goal_name)
-        var goalProgressText = itemView.findViewById<TextView>(R.id.goal_progress)
-
+        var goalIconView: ImageView = itemView.findViewById(R.id.goal_icon)
+        var goalNameText: TextView = itemView.findViewById(R.id.goal_name)
+        var goalProgressText: TextView = itemView.findViewById(R.id.goal_progress)
     }
 }

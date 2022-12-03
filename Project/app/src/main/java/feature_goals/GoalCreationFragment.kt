@@ -29,7 +29,7 @@ class GoalCreationFragment : Fragment()
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
 
         val binding = FragmentGoalCreationBinding.inflate(inflater, container, false)
 
@@ -60,22 +60,27 @@ class GoalCreationFragment : Fragment()
     private fun createGoal()
     {
         //TODO: HAVE GOAL TYPE A USER ENTERED PIECE OF DATA
-        var goalType = 0
+        val goalType = 0
 
-        var goalName = goalNameEditText?.text.toString()
-        var goalTarget = goalTargetEditText?.text.toString()
+        val goalName = goalNameEditText?.text.toString()
+        val goalTarget = goalTargetEditText?.text.toString()
 
         activity?.let {
-            var sharedPreferences = it.getSharedPreferences(Consts.USER_PREFS, AppCompatActivity.MODE_PRIVATE)
-            var userId = sharedPreferences.getInt("userId", -1)
+            val sharedPreferences = it.getSharedPreferences(Consts.USER_PREFS, AppCompatActivity.MODE_PRIVATE)
+            val userId = sharedPreferences.getInt(Consts.PREFS_USER_ID, -1)
 
             goalManager?.createGoal(goalType, goalName, goalTarget, userId)
 
-            //TODO: TEST TO MAKE SURE THE GOAL WAS ADDED SUCCESSFULLY
-            goalManager?.fetchGoals(userId)
+            val updatedGoals = goalManager?.fetchGoals(userId)
 
-            it.supportFragmentManager?.beginTransaction()?.replace(R.id.frameLayout, GoalManagementFragment(), "")
-                ?.addToBackStack("null")?.commit()
+            val updatedGoalBundle = Bundle()
+            updatedGoalBundle.putSerializable(Consts.USER_GOALS, updatedGoals)
+
+            val goalManagementFragment = GoalManagementFragment()
+            goalManagementFragment.arguments = updatedGoalBundle
+
+            it.supportFragmentManager?.beginTransaction()?.replace(R.id.frameLayout, goalManagementFragment, "")
+                ?.commit()
         }
     }
 }

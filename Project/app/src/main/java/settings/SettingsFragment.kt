@@ -9,6 +9,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
+import android.widget.TextView
 import com.example.goal_tracker.R
 import com.example.goal_tracker.databinding.FragmentSettingsBinding
 import shared.Consts
@@ -16,13 +17,14 @@ import shared.Consts
 class SettingsFragment : Fragment()
 {
     private var logOutButton: Button? = null
+    private var emailTextView: TextView? = null
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
 
-        var binding = FragmentSettingsBinding.inflate(inflater, container, false)
+        val binding = FragmentSettingsBinding.inflate(inflater, container, false)
 
         return binding.root
     }
@@ -30,23 +32,27 @@ class SettingsFragment : Fragment()
     override fun onStart() {
         super.onStart()
 
-        logOutButton = view?.findViewById(R.id.logOutBtn)
+        emailTextView = view?.findViewById(R.id.loggedInUserTextView)
+        //TODO: Try get from other fragment instead
+        emailTextView?.text = getString(R.string.user_email_text, "Get from prefs")
 
+        logOutButton = view?.findViewById(R.id.logOutBtn)
         logOutButton?.setOnClickListener { logOut() }
     }
 
     private fun logOut()
     {
         activity?.let {
-            var sharedPreferences = it.getSharedPreferences(Consts.USER_PREFS, AppCompatActivity.MODE_PRIVATE)
-            var editor = sharedPreferences.edit()
+            val sharedPreferences = it.getSharedPreferences(Consts.USER_PREFS, AppCompatActivity.MODE_PRIVATE)
+            val editor = sharedPreferences.edit()
 
             editor.apply {
                 putBoolean(Consts.PREFS_LOGGED_IN, false)
             }.apply()
 
-            var intent = Intent(it, LoginActivity::class.java)
+            val intent = Intent(it, LoginActivity::class.java)
             startActivity(intent)
+            it.finish()
         }
     }
 }
