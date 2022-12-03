@@ -31,7 +31,7 @@ class AccountDatabaseOpenHelper(context: Context, name: String, factory: SQLiteD
         p0?.execSQL(CREATE_TABLE)
     }
 
-    public fun insertData(userEmail : String, userPassword: String, userDisplayName: String) : Boolean
+    fun insertData(userEmail : String, userPassword: String, userDisplayName: String) : Boolean
     {
         val newAccount: ContentValues = ContentValues().apply{
             put("USER_EMAIL", userEmail)
@@ -39,7 +39,7 @@ class AccountDatabaseOpenHelper(context: Context, name: String, factory: SQLiteD
             put("USER_DISPLAY_NAME", userDisplayName)
         }
 
-        var result = wb.insert("users_test", null, newAccount)
+        val result = wb.insert("users_test", null, newAccount)
 
         if(result == -1L)
         {
@@ -50,56 +50,92 @@ class AccountDatabaseOpenHelper(context: Context, name: String, factory: SQLiteD
         return true
     }
 
-    public fun checkUserName(userEmail: String) : Boolean
+    fun checkUserName(userEmail: String) : Boolean
     {
-        var userEmails = arrayOf(userEmail)
-        var cursor = rb.rawQuery("SELECT * FROM users_test WHERE USER_EMAIL = ?", userEmails)
+        val userEmails = arrayOf(userEmail)
+        val cursor = rb.rawQuery("SELECT * FROM users_test WHERE USER_EMAIL = ?", userEmails)
 
         if(cursor.count > 0)
         {
+            cursor.close()
             return true
         }
 
         return false
     }
 
-    public fun checkUserNameAndPassword(userEmail: String, userPassword: String) : Boolean
+    fun checkUserNameAndPassword(userEmail: String, userPassword: String) : Boolean
     {
-        var userEmailsAndPasswords = arrayOf(userEmail, userPassword)
-        var cursor = rb.rawQuery("SELECT * FROM users_test WHERE USER_EMAIL = ? AND USER_PASSWORD = ?", userEmailsAndPasswords)
+        val userEmailsAndPasswords = arrayOf(userEmail, userPassword)
+        val cursor = rb.rawQuery("SELECT * FROM users_test WHERE USER_EMAIL = ? AND USER_PASSWORD = ?", userEmailsAndPasswords)
 
         if(cursor.count > 0)
         {
+            cursor.close()
             return true
         }
         return false
     }
 
-    public fun getUserId(userEmail: String, userPassword: String) : Int
+    fun getUserId(userEmail: String, userPassword: String) : Int
     {
-        var userEmailsAndPasswords = arrayOf(userEmail, userPassword)
-        var cursor = rb.rawQuery("SELECT * FROM users_test WHERE USER_EMAIL = ? AND USER_PASSWORD = ?", userEmailsAndPasswords)
+        val userEmailsAndPasswords = arrayOf(userEmail, userPassword)
+        val cursor = rb.rawQuery("SELECT * FROM users_test WHERE USER_EMAIL = ? AND USER_PASSWORD = ?", userEmailsAndPasswords)
 
         cursor.moveToFirst()
         for(i in 0 until cursor.count)
         {
-            Log.d("AccountDatabase","User Id for Logged In User Is ${cursor.getInt(0)}")
-            return cursor.getInt(0)
+            val userId = cursor.getInt(0)
+            cursor.close()
+            return userId
         }
         return -1
     }
 
-    public fun getUserDisplayName(userId: Int) : String
+    fun getUserId(userEmail: String) : Int
     {
-        var id = arrayOf(userId.toString())
-        var cursor = rb.rawQuery("SELECT * FROM users_test WHERE ID = ? ", id)
+        val userEmails = arrayOf(userEmail)
+        val cursor = rb.rawQuery("SELECT * FROM users_test WHERE USER_EMAIL = ? ", userEmails)
 
         cursor.moveToFirst()
         for(i in 0 until cursor.count)
         {
-            Log.d("AccountDatabase","User Display Name for Logged In User Is ${cursor.getString(3)}")
-            return cursor.getString(3)
+            val userId = cursor.getInt(0)
+            cursor.close()
+            return userId
+        }
+        return -1
+    }
+
+    fun getUserDisplayName(userId: Int) : String
+    {
+        val id = arrayOf(userId.toString())
+        val cursor = rb.rawQuery("SELECT * FROM users_test WHERE ID = ? ", id)
+
+        cursor.moveToFirst()
+        for(i in 0 until cursor.count)
+        {
+            val userDisplayName = cursor.getString(3)
+            cursor.close()
+            return userDisplayName
         }
         return ""
+    }
+
+    fun getUserEmailAndDisplayName(userId : Int) : Array<String>
+    {
+        val id = arrayOf(userId.toString())
+        val cursor = rb.rawQuery("SELECT * FROM users_test WHERE ID = ? ", id)
+
+        cursor.moveToFirst()
+        for(i in 0 until cursor.count)
+        {
+            val userEmail = cursor.getString(1)
+            val userDisplayName = cursor.getString(3)
+
+            cursor.close()
+            return arrayOf(userEmail, userDisplayName)
+        }
+        return arrayOf()
     }
 }

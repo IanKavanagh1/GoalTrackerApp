@@ -19,6 +19,8 @@ class LoginActivity : AppCompatActivity()
 
     private var userEmail: String = ""
     private var userPassword: String = ""
+    private var userDisplayName: String = ""
+    private var id = 0
 
     override fun onCreate(savedInstanceState: Bundle?)
     {
@@ -29,7 +31,12 @@ class LoginActivity : AppCompatActivity()
 
         if(checkIfUserIsLoggedIn())
         {
-            goToMainActivity()
+            val sharedPreferences = getSharedPreferences(Consts.USER_PREFS, MODE_PRIVATE)
+            val id = sharedPreferences.getInt(Consts.PREFS_USER_ID, -1)
+
+            val userEmailAndDisplay = AccountManager.getUserEmailAndDisplayName(id)
+
+            goToMainActivity(LocalUserData(id, userEmailAndDisplay[0], userEmailAndDisplay[1]))
         }
 
         loginButton = findViewById(R.id.login)
@@ -61,17 +68,17 @@ class LoginActivity : AppCompatActivity()
                 val sharedPreferences = getSharedPreferences(Consts.USER_PREFS, MODE_PRIVATE)
                 val editor = sharedPreferences.edit()
 
-                //TODO: Pass the User Account details to the MainActivity via Explicit Intent
                 editor.apply {
                     putBoolean(Consts.PREFS_LOGGED_IN, true)
                     remove(Consts.PREFS_USER_ID)
-                    val id = AccountManager.getUserId(userEmail,userPassword)
+                    id = AccountManager.getUserId(userEmail,userPassword)
                     putInt(Consts.PREFS_USER_ID, id)
                     remove(Consts.PREFS_USER_DISPLAY_NAME)
-                    putString(Consts.PREFS_USER_DISPLAY_NAME, AccountManager.getUserDisplayName(id))
+                    userDisplayName = AccountManager.getUserDisplayName(id)
+                    putString(Consts.PREFS_USER_DISPLAY_NAME, userDisplayName)
                 }.apply()
 
-                goToMainActivity()
+                goToMainActivity(LocalUserData(id, userEmail, userDisplayName))
             }
             else
             {
@@ -94,9 +101,15 @@ class LoginActivity : AppCompatActivity()
         return sharedPreferences.getBoolean(Consts.PREFS_LOGGED_IN, false)
     }
 
-    private fun goToMainActivity()
+    private fun goToMainActivity(localUserData: LocalUserData?)
     {
         val intent = Intent(this, MainActivity::class.java)
+
+        if(localUserData != null)
+        {
+            intent.putExtra(Consts.LOCAL_USER_DATA, localUserData)
+        }
+
         startActivity(intent)
         finish()
     }

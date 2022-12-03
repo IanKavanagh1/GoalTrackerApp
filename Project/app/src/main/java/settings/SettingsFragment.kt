@@ -1,5 +1,6 @@
 package settings
 
+import account_creation.LocalUserData
 import account_creation.LoginActivity
 import android.content.Intent
 import android.os.Bundle
@@ -33,8 +34,10 @@ class SettingsFragment : Fragment()
         super.onStart()
 
         emailTextView = view?.findViewById(R.id.loggedInUserTextView)
-        //TODO: Try get from other fragment instead
-        emailTextView?.text = getString(R.string.user_email_text, "Get from prefs")
+
+        val localUserData = arguments?.getSerializable(Consts.LOCAL_USER_DATA) as LocalUserData
+
+        emailTextView?.text = getString(R.string.user_email_text, localUserData.userEmail)
 
         logOutButton = view?.findViewById(R.id.logOutBtn)
         logOutButton?.setOnClickListener { logOut() }

@@ -1,12 +1,13 @@
 package com.example.goal_tracker
 
+import account_creation.LocalUserData
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.support.v4.app.Fragment
-import android.util.Log
 import com.example.goal_tracker.databinding.ActivityMainBinding
 import exercise_planner.ExerciseMainFragment
 import feature_goals.GoalCreationFragment
+import feature_goals.GoalDataModel
 import feature_goals.GoalManagementFragment
 import feature_goals.GoalManager
 import meal_prep.MealMainFragment
@@ -20,6 +21,7 @@ class MainActivity : AppCompatActivity()
 
     private val goalManagementFragment = GoalManagementFragment()
     private val goalBundle = Bundle()
+    private var localUserData: LocalUserData? = null
 
     override fun onCreate(savedInstanceState: Bundle?)
     {
@@ -30,16 +32,13 @@ class MainActivity : AppCompatActivity()
 
         goalManager = GoalManager(this)
 
-        //Check if user has any goals
-        val sharedPreferences = getSharedPreferences(Consts.USER_PREFS, MODE_PRIVATE)
-        val userId = sharedPreferences.getInt(Consts.PREFS_USER_ID, -1)
+        localUserData = intent.getSerializableExtra(Consts.LOCAL_USER_DATA) as LocalUserData?
 
-        val userGoals = goalManager?.fetchGoals(userId)
+        val userGoals = getUserGoals(localUserData!!.userId)
 
         //if they do, bring them to the manage fragment
         if(userGoals?.isNotEmpty() == true)
         {
-            Log.d("Main Act","User Has Goals")
             goalBundle.putSerializable(Consts.USER_GOALS, userGoals)
             goalManagementFragment.arguments = goalBundle
             replaceFragment(goalManagementFragment)
@@ -47,7 +46,6 @@ class MainActivity : AppCompatActivity()
         //otherwise bring them to the creation fragment
         else
         {
-            Log.d("Main Act","User Has No Goals")
             replaceFragment(GoalCreationFragment())
         }
 
@@ -57,13 +55,22 @@ class MainActivity : AppCompatActivity()
             {
                 R.id.home ->
                 {
+                    goalBundle.putSerializable(Consts.USER_GOALS, userGoals)
                     goalManagementFragment.arguments = goalBundle
                     replaceFragment(goalManagementFragment)
                 }
 
                 R.id.meals -> replaceFragment(MealMainFragment())
                 R.id.exercise -> replaceFragment(ExerciseMainFragment())
-                R.id.settings -> replaceFragment(SettingsFragment())
+                R.id.settings -> {
+
+                    val settingsFragment = SettingsFragment()
+                    val settingsBundle = Bundle()
+
+                    settingsBundle.putSerializable(Consts.LOCAL_USER_DATA, localUserData)
+                    settingsFragment.arguments = settingsBundle
+                    replaceFragment(settingsFragment)
+                }
             }
 
             true
@@ -74,5 +81,10 @@ class MainActivity : AppCompatActivity()
     {
        val fragmentTransaction = supportFragmentManager.beginTransaction()
         fragmentTransaction.replace(R.id.frameLayout, fragment).commit()
+    }
+
+    private fun getUserGoals(userId: Int) : ArrayList<GoalDataModel>?
+    {
+       return goalManager?.fetchGoals(userId)
     }
 }

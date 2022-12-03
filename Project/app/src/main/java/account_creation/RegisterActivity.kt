@@ -21,6 +21,7 @@ class RegisterActivity : AppCompatActivity()
     private var userEmail: String = ""
     private var userPassword: String = ""
     private var userDisplayName: String = ""
+    private var id = 0
 
     override fun onCreate(savedInstanceState: Bundle?)
     {
@@ -66,17 +67,16 @@ class RegisterActivity : AppCompatActivity()
                     val sharedPreferences = getSharedPreferences(Consts.USER_PREFS, MODE_PRIVATE)
                     val editor = sharedPreferences.edit()
 
-                    //TODO: Pass the User Account details to the MainActivity via Explicit Intent
                     editor.apply {
                         putBoolean(Consts.PREFS_LOGGED_IN, true)
                         remove(Consts.PREFS_USER_ID)
-                        val id = AccountManager.getUserId(userEmail,userPassword)
+                        id = AccountManager.getUserId(userEmail,userPassword)
                         putInt(Consts.PREFS_USER_ID, id)
                         remove(Consts.PREFS_USER_DISPLAY_NAME)
                         putString(Consts.PREFS_USER_DISPLAY_NAME, AccountManager.getUserDisplayName(id))
                     }.apply()
 
-                    goToMainActivity()
+                    goToMainActivity(LocalUserData(id, userEmail, userDisplayName))
                 }
                 else
                 {
@@ -93,9 +93,15 @@ class RegisterActivity : AppCompatActivity()
         finish()
     }
 
-    private fun goToMainActivity()
+    private fun goToMainActivity(localUserData: LocalUserData?)
     {
         val intent = Intent(this, MainActivity::class.java)
+
+        if(localUserData != null)
+        {
+            intent.putExtra(Consts.LOCAL_USER_DATA, localUserData)
+        }
+
         startActivity(intent)
         finish()
     }
