@@ -85,6 +85,7 @@ class LoginActivity : AppCompatActivity()
     {
         var intent = Intent(this, RegisterActivity::class.java)
         startActivity(intent)
+        finish()
     }
 
     private fun checkIfUserIsLoggedIn() : Boolean

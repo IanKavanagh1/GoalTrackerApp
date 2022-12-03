@@ -90,5 +90,6 @@ class RegisterActivity : AppCompatActivity()
     {
         var intent = Intent(this, LoginActivity::class.java)
         startActivity(intent)
+        finish()
     }
 }
