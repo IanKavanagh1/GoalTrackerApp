@@ -92,21 +92,6 @@ class AccountDatabaseOpenHelper(context: Context, name: String, factory: SQLiteD
         return -1
     }
 
-    fun getUserId(userEmail: String) : Int
-    {
-        val userEmails = arrayOf(userEmail)
-        val cursor = rb.rawQuery("SELECT * FROM users_test WHERE USER_EMAIL = ? ", userEmails)
-
-        cursor.moveToFirst()
-        for(i in 0 until cursor.count)
-        {
-            val userId = cursor.getInt(0)
-            cursor.close()
-            return userId
-        }
-        return -1
-    }
-
     fun getUserDisplayName(userId: Int) : String
     {
         val id = arrayOf(userId.toString())

@@ -23,11 +23,6 @@ object AccountManager
         return accountDatabaseOpenHelper.getUserId(userEmail, userPassword)
     }
 
-    fun getUserId(userEmail: String) : Int
-    {
-        return accountDatabaseOpenHelper.getUserId(userEmail)
-    }
-
     fun getUserDisplayName(userId: Int) : String
     {
         return accountDatabaseOpenHelper.getUserDisplayName(userId)
