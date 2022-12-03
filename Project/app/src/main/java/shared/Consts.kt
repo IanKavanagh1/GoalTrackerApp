@@ -16,6 +16,7 @@ object Consts
 
     // Fragment Arguments
     const val USER_GOALS = "user_goals"
+    const val SELECTED_GOAL = "selected_goal"
 
     // Activity Arguments
     const val LOCAL_USER_DATA = "local_user_data"

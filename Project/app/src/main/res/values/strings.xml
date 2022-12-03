@@ -53,4 +53,5 @@
     <string name="user_email_text">%s</string>
     <string name="toggle_dark_mode">Enable Dark Mode</string>
     <string name="toggle">Dark Mode</string>
+    <string name="goal_name_editor">%s</string>
 </resources>

@@ -5,6 +5,7 @@ import android.support.v4.app.Fragment
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -12,9 +13,10 @@ import android.widget.Button
 import android.widget.TextView
 import com.example.goal_tracker.R
 import com.example.goal_tracker.databinding.FragmentGoalManagmentBinding
+import settings.SettingsFragment
 import shared.Consts
 
-class GoalManagementFragment : Fragment()
+class GoalManagementFragment : Fragment(), GoalRecylerViewInterface
 {
     private var goalManager: GoalManager? = null
     private var goalListView: RecyclerView? = null
@@ -53,7 +55,7 @@ class GoalManagementFragment : Fragment()
 
             userGoals = arguments?.getSerializable(Consts.USER_GOALS) as ArrayList<GoalDataModel>
 
-            adapter = userGoals?.let{ it1 -> GoalRecyclerViewAdapter(it, it1) }
+            adapter = userGoals?.let{ it1 -> GoalRecyclerViewAdapter(it, it1, this) }
 
             layoutManager = LinearLayoutManager(it)
         }
@@ -68,6 +70,22 @@ class GoalManagementFragment : Fragment()
     {
         activity?.let {
             it.supportFragmentManager?.beginTransaction()?.replace(R.id.frameLayout, GoalCreationFragment(), "")
+                ?.addToBackStack("null")?.commit()
+        }
+    }
+
+    override fun onItemClick(position: Int) {
+        val selectedGoal = userGoals?.get(position)
+
+        val selectedGoalBundle = Bundle()
+
+        selectedGoalBundle.putSerializable(Consts.SELECTED_GOAL, selectedGoal)
+
+        val goalEditorFragment = GoalEditorFragment()
+        goalEditorFragment.arguments = selectedGoalBundle
+
+        activity?.let {
+            it.supportFragmentManager?.beginTransaction()?.replace(R.id.frameLayout, goalEditorFragment, "")
                 ?.addToBackStack("null")?.commit()
         }
     }
