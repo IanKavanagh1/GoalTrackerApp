@@ -60,7 +60,7 @@ class HeartRateDatabaseOpenHelper(context: Context, name: String, factory: SQLit
         cursor.moveToFirst()
         for(i in 0 until cursor.count)
         {
-            Log.d("Heart Rate Database","User Id for Logged In User Is ${cursor.getInt(3)}")
+            Log.d("Heart Rate Database","User Id for Logged In User Is ${cursor.getInt(2)}")
             userHeartRateData.add(cursor.getInt(1))
             cursor.moveToNext()
         }

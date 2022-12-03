@@ -192,7 +192,12 @@ class ExerciseMainFragment : Fragment(), SensorEventListener
                 averageHeartRate += data[i]
             }
 
-            return averageHeartRate / data.size
+            if( data.size > 0 )
+            {
+                return averageHeartRate / data.size
+            }
+
+            return averageHeartRate
         }
 
         return 0
