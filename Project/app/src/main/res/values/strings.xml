@@ -54,4 +54,5 @@
     <string name="toggle_dark_mode">Enable Dark Mode</string>
     <string name="toggle">Dark Mode</string>
     <string name="goal_name_editor">%s</string>
+    <string name="update_goal_button">Update Goal</string>
 </resources>

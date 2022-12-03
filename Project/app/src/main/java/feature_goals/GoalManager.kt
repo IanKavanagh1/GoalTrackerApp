@@ -50,7 +50,7 @@ class GoalManager (context: Context)
         c.moveToFirst()
         for(i in 0 until c.count)
         {
-            userGoals.add(GoalDataModel(0, 0, c.getString(2),0f))
+            userGoals.add(GoalDataModel(c.getInt(0), 0, 0, c.getString(2),0f))
             c.moveToNext()
         }
 
