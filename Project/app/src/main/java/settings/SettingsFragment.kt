@@ -19,6 +19,7 @@ class SettingsFragment : Fragment()
 {
     private var logOutButton: Button? = null
     private var emailTextView: TextView? = null
+    private var displayNameTextView: TextView? = null
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -34,10 +35,12 @@ class SettingsFragment : Fragment()
         super.onStart()
 
         emailTextView = view?.findViewById(R.id.loggedInUserTextView)
+        displayNameTextView = view?.findViewById(R.id.loggedInUserDisplayName)
 
         val localUserData = arguments?.getSerializable(Consts.LOCAL_USER_DATA) as LocalUserData
 
         emailTextView?.text = getString(R.string.user_email_text, localUserData.userEmail)
+        displayNameTextView?.text = getString(R.string.user_email_text, localUserData.userDisplayName)
 
         logOutButton = view?.findViewById(R.id.logOutBtn)
         logOutButton?.setOnClickListener { logOut() }
