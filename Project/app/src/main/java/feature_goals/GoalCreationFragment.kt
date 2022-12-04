@@ -1,8 +1,8 @@
 package feature_goals
 
+import account_creation.LocalUserData
 import android.os.Bundle
 import android.support.v4.app.Fragment
-import android.support.v7.app.AppCompatActivity
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -25,6 +25,7 @@ class GoalCreationFragment : Fragment()
     private var createGoalButton: Button? = null
 
     private var adapter: ArrayAdapter<GoalTypes>? = null
+    private var localUser: LocalUserData? = null
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -47,6 +48,8 @@ class GoalCreationFragment : Fragment()
             adapter?.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
         }
 
+        localUser = arguments?.getSerializable(Consts.LOCAL_USER_DATA) as LocalUserData
+
         // Get all UI Objects
         goalIconImageView = view?.findViewById(R.id.gIcon)
         goalTypeDropDown = view?.findViewById(R.id.gType)
@@ -66,14 +69,13 @@ class GoalCreationFragment : Fragment()
         val goalTarget = goalTargetEditText?.text.toString()
 
         activity?.let {
-            val sharedPreferences = it.getSharedPreferences(Consts.USER_PREFS, AppCompatActivity.MODE_PRIVATE)
-            val userId = sharedPreferences.getInt(Consts.PREFS_USER_ID, -1)
 
-            goalManager?.createGoal(goalType, goalName, goalTarget, userId)
+            goalManager?.createGoal(goalType, goalName, goalTarget, localUser!!.userId)
 
-            val updatedGoals = goalManager?.fetchGoals(userId)
+            val updatedGoals = goalManager?.fetchGoals(localUser!!.userId)
 
             val updatedGoalBundle = Bundle()
+            updatedGoalBundle.putSerializable(Consts.LOCAL_USER_DATA, localUser)
             updatedGoalBundle.putSerializable(Consts.USER_GOALS, updatedGoals)
 
             val goalManagementFragment = GoalManagementFragment()

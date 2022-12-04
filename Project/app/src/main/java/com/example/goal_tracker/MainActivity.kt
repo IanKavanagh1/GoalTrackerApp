@@ -40,6 +40,7 @@ class MainActivity : AppCompatActivity()
         if(userGoals?.isNotEmpty() == true)
         {
             goalBundle.putSerializable(Consts.USER_GOALS, userGoals)
+            goalBundle.putSerializable(Consts.LOCAL_USER_DATA, localUserData)
             goalManagementFragment.arguments = goalBundle
             replaceFragment(goalManagementFragment)
         }
@@ -55,7 +56,8 @@ class MainActivity : AppCompatActivity()
             {
                 R.id.home ->
                 {
-                    goalBundle.putSerializable(Consts.USER_GOALS, userGoals)
+                    goalBundle.putSerializable(Consts.USER_GOALS, getUserGoals(localUserData!!.userId))
+                    goalBundle.putSerializable(Consts.LOCAL_USER_DATA, localUserData)
                     goalManagementFragment.arguments = goalBundle
                     replaceFragment(goalManagementFragment)
                 }

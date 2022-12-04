@@ -33,6 +33,7 @@ class GoalManager (context: Context)
         }
 
         goalDatabase.insert(table_name, null, newGoal)
+        goalDatabase.close()
     }
 
     fun fetchGoals(userId: Int) : ArrayList<GoalDataModel>
@@ -55,17 +56,40 @@ class GoalManager (context: Context)
         }
 
         c.close()
+        goalDatabase.close()
 
         return  userGoals
     }
 
-    fun updateGoal()
+    fun updateGoal(goalId: Int, updatedGoalName: String)
     {
-        Log.d("Goal Manager"," Update Goal - To Be Implemented")
+        Log.d("Goal Manager"," Update Goal ID $goalId")
+        Log.d("Goal Manager", "Updated Goal Name $updatedGoalName")
+        goalDatabase = goalDatabaseOpenHelper.writableDatabase
+
+        val where = "GOAL_ID = ?"
+        val where_args = arrayOf(goalId.toString())
+
+        val updatedGoalValues = ContentValues().apply {
+            put("GOAL_TYPE", 0)
+            put("GOAL_NAME", updatedGoalName)
+            put("GOAL_TARGET", "Test")
+            put("USER_ID", 6)
+        }
+
+        goalDatabase.update(table_name, updatedGoalValues, where, where_args)
+
+        goalDatabase.close()
     }
 
-    fun removeGoal()
+    fun removeGoal(goalId: Int)
     {
-        Log.d("Goal Manager","Remove Goal - To Be Implemented")
+        goalDatabase = goalDatabaseOpenHelper.writableDatabase
+
+        val query = "DELETE FROM $table_name WHERE GOAL_ID='$goalId'"
+
+        goalDatabase.execSQL(query)
+
+        goalDatabase.close()
     }
 }

@@ -1,5 +1,6 @@
 package feature_goals
 
+import account_creation.LocalUserData
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.support.v7.app.AppCompatActivity
@@ -24,6 +25,7 @@ class GoalManagementFragment : Fragment(), GoalRecylerViewInterface
     private var welcomeBackTextView: TextView? = null
 
     private var userGoals : ArrayList<GoalDataModel>? = null
+    private var localUser: LocalUserData? = null
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -46,10 +48,8 @@ class GoalManagementFragment : Fragment(), GoalRecylerViewInterface
         activity?.let {
             goalManager = GoalManager(it)
 
-            val sharedPreferences = it.getSharedPreferences(Consts.USER_PREFS, AppCompatActivity.MODE_PRIVATE)
-            val savedUserDisplayName = sharedPreferences.getString(Consts.PREFS_USER_DISPLAY_NAME, "")
-
-            welcomeBackTextView?.text = getString(R.string.welcome_back_label, savedUserDisplayName)
+            localUser = arguments?.getSerializable(Consts.LOCAL_USER_DATA) as LocalUserData
+            welcomeBackTextView?.text = getString(R.string.welcome_back_label, localUser?.userDisplayName)
 
             userGoals = arguments?.getSerializable(Consts.USER_GOALS) as ArrayList<GoalDataModel>
 
@@ -66,8 +66,14 @@ class GoalManagementFragment : Fragment(), GoalRecylerViewInterface
 
     private fun goToCreationUI()
     {
+        val goalCreationBundle = Bundle()
+        goalCreationBundle.putSerializable(Consts.LOCAL_USER_DATA, localUser)
+
+        val goalCreationFragment = GoalCreationFragment()
+        goalCreationFragment.arguments = goalCreationBundle
+
         activity?.let {
-            it.supportFragmentManager?.beginTransaction()?.replace(R.id.frameLayout, GoalCreationFragment(), "")
+            it.supportFragmentManager?.beginTransaction()?.replace(R.id.frameLayout, goalCreationFragment, "")
                 ?.addToBackStack("null")?.commit()
         }
     }
@@ -78,6 +84,7 @@ class GoalManagementFragment : Fragment(), GoalRecylerViewInterface
         val selectedGoalBundle = Bundle()
 
         selectedGoalBundle.putSerializable(Consts.SELECTED_GOAL, selectedGoal)
+        selectedGoalBundle.putSerializable(Consts.LOCAL_USER_DATA, localUser)
 
         val goalEditorFragment = GoalEditorFragment()
         goalEditorFragment.arguments = selectedGoalBundle
