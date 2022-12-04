@@ -3,7 +3,6 @@ package feature_goals
 import account_creation.LocalUserData
 import android.os.Bundle
 import android.support.v4.app.Fragment
-import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
@@ -17,7 +16,6 @@ import shared.Consts
 
 class GoalManagementFragment : Fragment(), GoalRecylerViewInterface
 {
-    private var goalManager: GoalManager? = null
     private var goalListView: RecyclerView? = null
     private var adapter: GoalRecyclerViewAdapter? = null
     private var layoutManager: LinearLayoutManager? = null
@@ -46,8 +44,6 @@ class GoalManagementFragment : Fragment(), GoalRecylerViewInterface
         goalListView = view?.findViewById(R.id.goal_recycler_view)
 
         activity?.let {
-            goalManager = GoalManager(it)
-
             localUser = arguments?.getSerializable(Consts.LOCAL_USER_DATA) as LocalUserData
             welcomeBackTextView?.text = getString(R.string.welcome_back_label, localUser?.userDisplayName)
 

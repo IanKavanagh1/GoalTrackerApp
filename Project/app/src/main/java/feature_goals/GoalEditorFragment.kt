@@ -17,7 +17,6 @@ class GoalEditorFragment : Fragment() {
     private var selectedGoalName: TextView? = null
     private var updateGoalButton: Button? = null
     private var deleteGoalButton: Button? = null
-    private var goalManager: GoalManager? = null
     private var localUser: LocalUserData? = null
 
     private var updatedGoalName = ""
@@ -36,7 +35,7 @@ class GoalEditorFragment : Fragment() {
         super.onStart()
 
         activity?.let {
-            goalManager = GoalManager(it)
+            GoalManager.setUpDatabase(it)
         }
 
         selectedGoalName = view?.findViewById(R.id.selectedGoalName)
@@ -59,14 +58,14 @@ class GoalEditorFragment : Fragment() {
     private fun updateGoal(goalId: Int)
     {
         updatedGoalName = selectedGoalName?.text.toString()
-        goalManager?.updateGoal(goalId, updatedGoalName)
+        GoalManager.updateGoal(goalId, updatedGoalName)
 
         goBackToGoalManagementFragment()
     }
 
     private fun deleteGoal(goalId: Int)
     {
-        goalManager?.removeGoal(goalId)
+        GoalManager.removeGoal(goalId)
 
         goBackToGoalManagementFragment()
     }
@@ -76,7 +75,7 @@ class GoalEditorFragment : Fragment() {
         val goalManagementFragment = GoalManagementFragment()
 
         val updatedGoalBundle = Bundle()
-        updatedGoalBundle.putSerializable(Consts.USER_GOALS, goalManager?.fetchGoals(localUser!!.userId))
+        updatedGoalBundle.putSerializable(Consts.USER_GOALS, GoalManager.fetchGoals(localUser!!.userId))
         updatedGoalBundle.putSerializable(Consts.LOCAL_USER_DATA, localUser)
         goalManagementFragment.arguments = updatedGoalBundle
 

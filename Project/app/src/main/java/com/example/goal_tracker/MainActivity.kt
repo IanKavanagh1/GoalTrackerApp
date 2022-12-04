@@ -16,7 +16,6 @@ import shared.Consts
 class MainActivity : AppCompatActivity()
 {
     private var binding: ActivityMainBinding? = null
-    private var goalManager: GoalManager? = null
 
     private val goalManagementFragment = GoalManagementFragment()
     private val goalBundle = Bundle()
@@ -26,17 +25,17 @@ class MainActivity : AppCompatActivity()
     {
         super.onCreate(savedInstanceState)
 
+        GoalManager.setUpDatabase(this)
+
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding?.root)
-
-        goalManager = GoalManager(this)
 
         localUserData = intent.getSerializableExtra(Consts.LOCAL_USER_DATA) as LocalUserData?
 
         val userGoals = getUserGoals(localUserData!!.userId)
 
         //if they do, bring them to the manage fragment
-        if(userGoals?.isNotEmpty() == true)
+        if(userGoals.isNotEmpty())
         {
             goalBundle.putSerializable(Consts.USER_GOALS, userGoals)
             goalBundle.putSerializable(Consts.LOCAL_USER_DATA, localUserData)
@@ -46,7 +45,13 @@ class MainActivity : AppCompatActivity()
         //otherwise bring them to the creation fragment
         else
         {
-            replaceFragment(GoalCreationFragment())
+            val goalCreationBundle = Bundle()
+            goalCreationBundle.putSerializable(Consts.LOCAL_USER_DATA, localUserData)
+
+            val goalCreationFragment = GoalCreationFragment()
+            goalCreationFragment.arguments = goalCreationBundle
+
+            replaceFragment(goalCreationFragment)
         }
 
         binding?.bottomNavigationView?.setOnNavigationItemSelectedListener {
@@ -83,8 +88,8 @@ class MainActivity : AppCompatActivity()
         fragmentTransaction.replace(R.id.frameLayout, fragment).commit()
     }
 
-    private fun getUserGoals(userId: Int) : ArrayList<GoalDataModel>?
+    private fun getUserGoals(userId: Int) : ArrayList<GoalDataModel>
     {
-       return goalManager?.fetchGoals(userId)
+       return GoalManager.fetchGoals(userId)
     }
 }

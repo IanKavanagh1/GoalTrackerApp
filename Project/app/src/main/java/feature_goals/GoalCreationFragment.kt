@@ -17,7 +17,6 @@ import shared.Consts
 
 class GoalCreationFragment : Fragment()
 {
-    private var goalManager: GoalManager? = null
     private var goalIconImageView: ImageView? = null
     private var goalTypeDropDown: Spinner? = null
     private var goalNameEditText: EditText? = null
@@ -41,7 +40,7 @@ class GoalCreationFragment : Fragment()
         super.onStart()
 
         activity?.let {
-            goalManager = GoalManager(it)
+            //GoalManager.setUpDatabase(it)
 
             // Set up Goal Type Drop Down
             adapter = ArrayAdapter<GoalTypes>(it, android.R.layout.simple_spinner_item, GoalTypes.values())
@@ -70,9 +69,9 @@ class GoalCreationFragment : Fragment()
 
         activity?.let {
 
-            goalManager?.createGoal(goalType, goalName, goalTarget, localUser!!.userId)
+            GoalManager.createGoal(goalType, goalName, goalTarget, "0",localUser!!.userId)
 
-            val updatedGoals = goalManager?.fetchGoals(localUser!!.userId)
+            val updatedGoals = GoalManager.fetchGoals(localUser!!.userId)
 
             val updatedGoalBundle = Bundle()
             updatedGoalBundle.putSerializable(Consts.LOCAL_USER_DATA, localUser)

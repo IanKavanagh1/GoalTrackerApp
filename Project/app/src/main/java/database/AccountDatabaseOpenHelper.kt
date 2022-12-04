@@ -5,19 +5,20 @@ import android.content.Context
 import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
 import android.util.Log
+import shared.Consts
 
 class AccountDatabaseOpenHelper(context: Context, name: String, factory: SQLiteDatabase.CursorFactory?,
                              version: Int) : SQLiteOpenHelper(context, name, factory, version)
 {
-    // TODO: Use database name from Const File
-    private val CREATE_TABLE :String = "CREATE TABLE users_test(" +
+    private val tableName = Consts.USER_DATABASE
+    private val CREATE_TABLE :String = "CREATE TABLE $tableName(" +
             "ID integer PRIMARY KEY AUTOINCREMENT,"+
             "USER_EMAIL string," +
             "USER_PASSWORD string," +
             "USER_DISPLAY_NAME string" +
             ")"
 
-    private val DROP_TABLE: String = "DROP TABLE IF EXISTS users_test"
+    private val DROP_TABLE: String = "DROP TABLE IF EXISTS $tableName"
 
     private val wb = this.writableDatabase
     private val rb = this.readableDatabase
@@ -39,7 +40,7 @@ class AccountDatabaseOpenHelper(context: Context, name: String, factory: SQLiteD
             put("USER_DISPLAY_NAME", userDisplayName)
         }
 
-        val result = wb.insert("users_test", null, newAccount)
+        val result = wb.insert(tableName, null, newAccount)
 
         if(result == -1L)
         {
@@ -53,7 +54,7 @@ class AccountDatabaseOpenHelper(context: Context, name: String, factory: SQLiteD
     fun checkUserName(userEmail: String) : Boolean
     {
         val userEmails = arrayOf(userEmail)
-        val cursor = rb.rawQuery("SELECT * FROM users_test WHERE USER_EMAIL = ?", userEmails)
+        val cursor = rb.rawQuery("SELECT * FROM $tableName WHERE USER_EMAIL = ?", userEmails)
 
         if(cursor.count > 0)
         {
@@ -67,7 +68,7 @@ class AccountDatabaseOpenHelper(context: Context, name: String, factory: SQLiteD
     fun checkUserNameAndPassword(userEmail: String, userPassword: String) : Boolean
     {
         val userEmailsAndPasswords = arrayOf(userEmail, userPassword)
-        val cursor = rb.rawQuery("SELECT * FROM users_test WHERE USER_EMAIL = ? AND USER_PASSWORD = ?", userEmailsAndPasswords)
+        val cursor = rb.rawQuery("SELECT * FROM $tableName WHERE USER_EMAIL = ? AND USER_PASSWORD = ?", userEmailsAndPasswords)
 
         if(cursor.count > 0)
         {
@@ -80,7 +81,7 @@ class AccountDatabaseOpenHelper(context: Context, name: String, factory: SQLiteD
     fun getUserId(userEmail: String, userPassword: String) : Int
     {
         val userEmailsAndPasswords = arrayOf(userEmail, userPassword)
-        val cursor = rb.rawQuery("SELECT * FROM users_test WHERE USER_EMAIL = ? AND USER_PASSWORD = ?", userEmailsAndPasswords)
+        val cursor = rb.rawQuery("SELECT * FROM $tableName WHERE USER_EMAIL = ? AND USER_PASSWORD = ?", userEmailsAndPasswords)
 
         cursor.moveToFirst()
         for(i in 0 until cursor.count)
@@ -95,7 +96,7 @@ class AccountDatabaseOpenHelper(context: Context, name: String, factory: SQLiteD
     fun getUserDisplayName(userId: Int) : String
     {
         val id = arrayOf(userId.toString())
-        val cursor = rb.rawQuery("SELECT * FROM users_test WHERE ID = ? ", id)
+        val cursor = rb.rawQuery("SELECT * FROM $tableName WHERE ID = ? ", id)
 
         cursor.moveToFirst()
         for(i in 0 until cursor.count)
@@ -110,7 +111,7 @@ class AccountDatabaseOpenHelper(context: Context, name: String, factory: SQLiteD
     fun getUserEmailAndDisplayName(userId : Int) : Array<String>
     {
         val id = arrayOf(userId.toString())
-        val cursor = rb.rawQuery("SELECT * FROM users_test WHERE ID = ? ", id)
+        val cursor = rb.rawQuery("SELECT * FROM $tableName WHERE ID = ? ", id)
 
         cursor.moveToFirst()
         for(i in 0 until cursor.count)
