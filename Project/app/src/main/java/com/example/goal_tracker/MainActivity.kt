@@ -10,7 +10,6 @@ import feature_goals.GoalCreationFragment
 import feature_goals.GoalDataModel
 import feature_goals.GoalManagementFragment
 import feature_goals.GoalManager
-import meal_prep.MealMainFragment
 import settings.SettingsFragment
 import shared.Consts
 
@@ -62,7 +61,6 @@ class MainActivity : AppCompatActivity()
                     replaceFragment(goalManagementFragment)
                 }
 
-                R.id.meals -> replaceFragment(MealMainFragment())
                 R.id.exercise -> replaceFragment(ExerciseMainFragment())
                 R.id.settings -> {
 
