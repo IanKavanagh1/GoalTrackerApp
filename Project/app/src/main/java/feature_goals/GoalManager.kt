@@ -71,10 +71,7 @@ class GoalManager (context: Context)
         val where_args = arrayOf(goalId.toString())
 
         val updatedGoalValues = ContentValues().apply {
-            put("GOAL_TYPE", 0)
             put("GOAL_NAME", updatedGoalName)
-            put("GOAL_TARGET", "Test")
-            put("USER_ID", 6)
         }
 
         goalDatabase.update(table_name, updatedGoalValues, where, where_args)
