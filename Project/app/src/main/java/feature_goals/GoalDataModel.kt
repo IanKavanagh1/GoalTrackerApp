@@ -2,6 +2,7 @@ package feature_goals
 
 import java.io.Serializable
 
+// Data class to hold all goal data
 data class GoalDataModel(
     val goalId: Int,
     val iconId: Int,

@@ -44,16 +44,21 @@ class GoalManagementFragment : Fragment(), GoalRecylerViewInterface
         goalListView = view?.findViewById(R.id.goal_recycler_view)
 
         activity?.let {
+
+            // grab user data from passed in arguments
             localUser = arguments?.getSerializable(Consts.LOCAL_USER_DATA) as LocalUserData
             welcomeBackTextView?.text = getString(R.string.welcome_back_label, localUser?.userDisplayName)
 
+            // grab user goals from passed in arguments
             userGoals = arguments?.getSerializable(Consts.USER_GOALS) as ArrayList<GoalDataModel>
 
+            // set up list of goals
             adapter = userGoals?.let{ it1 -> GoalRecyclerViewAdapter(it, it1, this) }
 
             layoutManager = LinearLayoutManager(it)
         }
 
+        // populate goal list
         goalListView?.adapter = adapter
         goalListView?.layoutManager = layoutManager
 
@@ -62,29 +67,40 @@ class GoalManagementFragment : Fragment(), GoalRecylerViewInterface
 
     private fun goToCreationUI()
     {
+        // set up creation bundle
         val goalCreationBundle = Bundle()
+
+        // add the user data to the bundle
         goalCreationBundle.putSerializable(Consts.LOCAL_USER_DATA, localUser)
 
         val goalCreationFragment = GoalCreationFragment()
+        // pass the bundle to the creation fragment
         goalCreationFragment.arguments = goalCreationBundle
 
+        // transition to the creation fragment
         activity?.let {
             it.supportFragmentManager?.beginTransaction()?.replace(R.id.frameLayout, goalCreationFragment, "")
                 ?.addToBackStack("null")?.commit()
         }
     }
 
+    // Item Click event handler
     override fun onItemClick(position: Int) {
+
+        // get the selected goal
         val selectedGoal = userGoals?.get(position)
 
         val selectedGoalBundle = Bundle()
 
+        // add the selected goal and user data to a bundle
         selectedGoalBundle.putSerializable(Consts.SELECTED_GOAL, selectedGoal)
         selectedGoalBundle.putSerializable(Consts.LOCAL_USER_DATA, localUser)
 
+        // create editor fragment and pass in bundle
         val goalEditorFragment = GoalEditorFragment()
         goalEditorFragment.arguments = selectedGoalBundle
 
+        // transition to goal editor ui
         activity?.let {
             it.supportFragmentManager?.beginTransaction()?.replace(R.id.frameLayout, goalEditorFragment, "")
                 ?.addToBackStack("null")?.commit()

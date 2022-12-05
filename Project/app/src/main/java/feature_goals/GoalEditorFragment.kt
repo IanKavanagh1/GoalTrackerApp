@@ -35,13 +35,18 @@ class GoalEditorFragment : Fragment() {
         super.onStart()
 
         activity?.let {
+
+            //TODO: Confirm this is needed
+            // Set up database
             GoalManager.setUpDatabase(it)
         }
 
         selectedGoalName = view?.findViewById(R.id.selectedGoalName)
 
+        // grab the selected goal from shared arguments
         val selectedGoal = arguments?.getSerializable(Consts.SELECTED_GOAL) as GoalDataModel
 
+        // grab the local user data from the shared arguments
         localUser = arguments?.getSerializable(Consts.LOCAL_USER_DATA) as LocalUserData
 
         selectedGoalName?.text = getString(R.string.goal_name_editor, selectedGoal.goalName)
@@ -57,14 +62,19 @@ class GoalEditorFragment : Fragment() {
 
     private fun updateGoal(goalId: Int)
     {
+        // get the updated goal name from the user
         updatedGoalName = selectedGoalName?.text.toString()
+
+        // update goal
         GoalManager.updateGoal(goalId, updatedGoalName)
 
+        // transition to the management fragment
         goBackToGoalManagementFragment()
     }
 
     private fun deleteGoal(goalId: Int)
     {
+        // delete goal with id provided
         GoalManager.removeGoal(goalId)
 
         goBackToGoalManagementFragment()
@@ -72,13 +82,18 @@ class GoalEditorFragment : Fragment() {
 
     private fun goBackToGoalManagementFragment()
     {
+        // create goal management fragment
         val goalManagementFragment = GoalManagementFragment()
 
+        // create new bundle for goal ui
         val updatedGoalBundle = Bundle()
+
+        // store updated data
         updatedGoalBundle.putSerializable(Consts.USER_GOALS, GoalManager.fetchGoals(localUser!!.userId))
         updatedGoalBundle.putSerializable(Consts.LOCAL_USER_DATA, localUser)
         goalManagementFragment.arguments = updatedGoalBundle
 
+        // transition back to the goal management ui
         activity?.let {
             it.supportFragmentManager?.beginTransaction()
                 ?.replace(R.id.frameLayout, goalManagementFragment, "")

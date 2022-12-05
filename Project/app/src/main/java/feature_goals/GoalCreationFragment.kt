@@ -40,13 +40,13 @@ class GoalCreationFragment : Fragment()
         super.onStart()
 
         activity?.let {
-            //GoalManager.setUpDatabase(it)
 
             // Set up Goal Type Drop Down
             adapter = ArrayAdapter<GoalTypes>(it, android.R.layout.simple_spinner_item, GoalTypes.values())
             adapter?.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
         }
 
+        // get local user from arguments passed in
         localUser = arguments?.getSerializable(Consts.LOCAL_USER_DATA) as LocalUserData
 
         // Get all UI Objects
@@ -56,6 +56,7 @@ class GoalCreationFragment : Fragment()
         goalTargetEditText = view?.findViewById(R.id.gTarget)
         createGoalButton = view?.findViewById(R.id.createGoalBtn)
 
+        // set up button listener
         createGoalButton?.setOnClickListener { createGoal() }
     }
 
@@ -69,17 +70,24 @@ class GoalCreationFragment : Fragment()
 
         activity?.let {
 
+            // create goal
             GoalManager.createGoal(goalType, goalName, goalTarget, "0",localUser!!.userId)
 
+            // get updated goals
             val updatedGoals = GoalManager.fetchGoals(localUser!!.userId)
 
+            // create updated goal bundle
             val updatedGoalBundle = Bundle()
+
+            // provide the local user and update goal to the bundle
             updatedGoalBundle.putSerializable(Consts.LOCAL_USER_DATA, localUser)
             updatedGoalBundle.putSerializable(Consts.USER_GOALS, updatedGoals)
 
+            // share the updated goal bundle to the goal management fragment
             val goalManagementFragment = GoalManagementFragment()
             goalManagementFragment.arguments = updatedGoalBundle
 
+            // go to management fragment
             it.supportFragmentManager?.beginTransaction()?.replace(R.id.frameLayout, goalManagementFragment, "")
                 ?.commit()
         }
