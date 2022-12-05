@@ -1,6 +1,7 @@
 package feature_goals
 
-interface GoalRecylerViewInterface {
+// Interface for Goal Recyler Interface
+interface GoalRecyclerViewInterface {
 
     fun onItemClick(position: Int)
 }

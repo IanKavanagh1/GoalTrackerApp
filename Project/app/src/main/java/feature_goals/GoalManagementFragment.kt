@@ -14,7 +14,7 @@ import com.example.goal_tracker.R
 import com.example.goal_tracker.databinding.FragmentGoalManagmentBinding
 import shared.Consts
 
-class GoalManagementFragment : Fragment(), GoalRecylerViewInterface
+class GoalManagementFragment : Fragment(), GoalRecyclerViewInterface
 {
     private var goalListView: RecyclerView? = null
     private var adapter: GoalRecyclerViewAdapter? = null
