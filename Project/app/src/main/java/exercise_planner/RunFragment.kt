@@ -2,7 +2,6 @@ package exercise_planner
 
 import android.content.Context
 import android.content.pm.PackageManager
-import android.location.Location
 import android.location.LocationListener
 import android.location.LocationManager
 import android.os.Bundle
@@ -53,6 +52,9 @@ class RunFragment : Fragment()
 
     private lateinit var loadingDialog: LoadingDialog
 
+    // Database name
+    private val dbName = Consts.EXERCISE_DATABASE + ".db"
+
     override fun onCreateView( inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?): View {
         val binding = FragmentRunBinding.inflate(layoutInflater, container, false)
@@ -66,10 +68,9 @@ class RunFragment : Fragment()
             locationManager = it.getSystemService(Context.LOCATION_SERVICE) as LocationManager
             loadingDialog = LoadingDialog(it)
 
-            //TODO: Replace name with const from Const file
-            exerciseDatabaseOpenHelper = ExerciseDatabaseOpenHelper(it, "exercise_database_test", null, 1)
+            exerciseDatabaseOpenHelper = ExerciseDatabaseOpenHelper(it, dbName, null, 1)
 
-            var sharedPreferences = it.getSharedPreferences(Consts.USER_PREFS, AppCompatActivity.MODE_PRIVATE)
+            val sharedPreferences = it.getSharedPreferences(Consts.USER_PREFS, AppCompatActivity.MODE_PRIVATE)
             userId = sharedPreferences.getInt(Consts.PREFS_USER_ID, -1)
         }
 
@@ -108,17 +109,14 @@ class RunFragment : Fragment()
             }
         }
 
-        startLocationListener = object : LocationListener {
-            override fun onLocationChanged(p0: Location) {
-                startLongitude = p0.longitude
-                startLatitude = p0.latitude
+        startLocationListener = LocationListener { p0 ->
+            startLongitude = p0.longitude
+            startLatitude = p0.latitude
 
-                // Once we have a location, we can remove the listener
-                if(startLatitude > 0 || startLatitude < 0  && startLongitude > 0 || startLongitude < 0)
-                {
-                    Log.d("Start Run", "Location Acquired, Removing Listener")
-                    locationManager?.removeUpdates(startLocationListener!!)
-                }
+            // Once we have a location, we can remove the listener
+            if(startLatitude > 0 || startLatitude < 0  && startLongitude > 0 || startLongitude < 0) {
+                Log.d("Start Run", "Location Acquired, Removing Listener")
+                locationManager?.removeUpdates(startLocationListener!!)
             }
         }
 
@@ -157,33 +155,30 @@ class RunFragment : Fragment()
             }
         }
 
-        endLocationListener = object : LocationListener {
-            override fun onLocationChanged(p0: Location) {
-                endLongitude = p0.longitude
-                endLatitude = p0.latitude
+        endLocationListener = LocationListener { p0 ->
+            endLongitude = p0.longitude
+            endLatitude = p0.latitude
 
-                // Once we have a location, we can remove the listener
-                if(endLatitude > 0 || endLatitude < 0  && endLongitude > 0 || endLongitude < 0)
-                {
-                    Log.d("Stop Run", "Location Acquired, Removing Listener")
+            // Once we have a location, we can remove the listener
+            if(endLatitude > 0 || endLatitude < 0  && endLongitude > 0 || endLongitude < 0) {
+                Log.d("Stop Run", "Location Acquired, Removing Listener")
 
-                    //Only calculate distance once we have received the end location
-                    val distance = calculateTotalDistance(startLatitude, endLatitude, startLongitude,
-                        endLongitude)
+                //Only calculate distance once we have received the end location
+                val distance = calculateTotalDistance(startLatitude, endLatitude, startLongitude,
+                    endLongitude)
 
-                    // Display the total distance covered
-                    totalDistanceTextView?.text = getString(R.string.distance_value, distance)
+                // Display the total distance covered
+                totalDistanceTextView?.text = getString(R.string.distance_value, distance)
 
-                    // Unsubscribe from event listener
-                    locationManager?.removeUpdates(endLocationListener!!)
+                // Unsubscribe from event listener
+                locationManager?.removeUpdates(endLocationListener!!)
 
-                    // Add data to database
-                    exerciseDatabaseOpenHelper?.insertData(startLatitude, startLongitude, endLatitude,
-                        endLongitude, distance, totalRunTime, userId)
+                // Add data to database
+                exerciseDatabaseOpenHelper?.insertData(startLatitude, startLongitude, endLatitude,
+                    endLongitude, distance, totalRunTime, userId)
 
-                    // Remove Loading Dialog
-                    loadingDialog.dismissDialog()
-                }
+                // Remove Loading Dialog
+                loadingDialog.dismissDialog()
             }
         }
 

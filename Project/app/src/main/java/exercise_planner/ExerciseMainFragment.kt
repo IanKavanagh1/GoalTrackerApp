@@ -33,22 +33,21 @@ class ExerciseMainFragment : Fragment(), SensorEventListener
     private var previousTotalSteps = 0f
     private var stepSensor: Sensor? = null
 
-    // Calorie Burned Variables
-    private var totalBurnedCalories = 0f
-
     // UI Variables
     private var stepCounterText: TextView? = null
     private var averageHeartRateText: TextView? = null
     private var checkHeartRateBtn: Button? = null
-    private var calorieBurnedText: TextView? = null
     private var goToRunFragButton: Button? = null
+
+    // Database name
+    private val dbName = Consts.EXERCISE_DATABASE + ".db"
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
 
-        var binding = FragmentExerciseMainBinding.inflate(layoutInflater, container, false)
+        val binding = FragmentExerciseMainBinding.inflate(layoutInflater, container, false)
 
         return binding.root
     }
@@ -57,10 +56,12 @@ class ExerciseMainFragment : Fragment(), SensorEventListener
         super.onStart()
 
         activity?.let {
+
+            // set up sensor manager
             sensorManager = it.getSystemService(Context.SENSOR_SERVICE) as SensorManager
 
-            //TODO: Replace name with const from Const file
-            heartRateDatabaseOpenHelper = HeartRateDatabaseOpenHelper(it, "heart_rate_test.db", null, 1)
+            // set up heart rate database
+            heartRateDatabaseOpenHelper = HeartRateDatabaseOpenHelper(it, dbName, null, 1)
         }
 
         stepCounterText = view?.findViewById(R.id.stepCounter)
@@ -73,9 +74,6 @@ class ExerciseMainFragment : Fragment(), SensorEventListener
 
         averageHeartRateText = view?.findViewById(R.id.averageHeartRate)
         averageHeartRateText?.text = getString(R.string.shared_single_value_int, calculateAverageHeartRate())
-
-        calorieBurnedText = view?.findViewById(R.id.caloriesBurned)
-        calorieBurnedText?.text = getString(R.string.calorie_value, 300.5)
     }
 
     override fun onResume() {
@@ -87,12 +85,15 @@ class ExerciseMainFragment : Fragment(), SensorEventListener
             // Get and Set up Step Sensor
             stepSensor = sensorManager?.getDefaultSensor(Sensor.TYPE_STEP_COUNTER)
 
+            // verify the device has the step sensor
             if(stepSensor == null)
             {
+                // Display notification if it does not
                 Toast.makeText(it,"Step Sensor Not Supported On This Device", Toast.LENGTH_SHORT).show()
             }
             else
             {
+                // verify the user has granted permission to the Activity Recognition permission
                 if(ActivityCompat.checkSelfPermission(it, android.Manifest.permission.ACTIVITY_RECOGNITION) !=
                     PackageManager.PERMISSION_GRANTED )
                 {
@@ -104,6 +105,7 @@ class ExerciseMainFragment : Fragment(), SensorEventListener
                     return
                 }
 
+                // once we have confirmed permission is granted we can register the listener
                 sensorManager?.registerListener(this, stepSensor, SensorManager.SENSOR_DELAY_FASTEST)
                 Log.d("Exercise Fragment", "Registering Listener to Step Sensor")
             }
@@ -113,12 +115,14 @@ class ExerciseMainFragment : Fragment(), SensorEventListener
     override fun onPause() {
         super.onPause()
 
+        // remove listener
         sensorManager?.unregisterListener(this)
     }
 
     override fun onSensorChanged(event: SensorEvent?) {
         if(running)
         {
+            // grab the total steps from the senor and display
             totalSteps = event!!.values[0]
             val currentSteps = totalSteps.toInt() - previousTotalSteps.toInt()
             stepCounterText?.text = getString(R.string.shared_single_value_int, currentSteps)
@@ -131,6 +135,8 @@ class ExerciseMainFragment : Fragment(), SensorEventListener
     private fun goToCheckHeartRateFragment()
     {
         activity?.let {
+
+            // verify the user has granted permission to body sensors
             if(ActivityCompat.checkSelfPermission(it, android.Manifest.permission.BODY_SENSORS) !=
                 PackageManager.PERMISSION_GRANTED )
             {
@@ -139,6 +145,7 @@ class ExerciseMainFragment : Fragment(), SensorEventListener
                 return
             }
 
+            // once verified we have permission, transition to the heart rate UI
             it.supportFragmentManager?.beginTransaction()?.replace(R.id.frameLayout, HeartBeatMonitorFragment(), "")
                 ?.addToBackStack("true")?.commit()
         }
@@ -146,6 +153,7 @@ class ExerciseMainFragment : Fragment(), SensorEventListener
 
     private fun goToRunFragment()
     {
+        // transition to the Run UI
         activity?.let {
             it.supportFragmentManager?.beginTransaction()
                 ?.replace(R.id.frameLayout, RunFragment(), "")
@@ -158,10 +166,12 @@ class ExerciseMainFragment : Fragment(), SensorEventListener
     {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
 
+        // check the request permission result
         if(requestCode == 1)
         {
             if(grantResults[0] == PackageManager.PERMISSION_GRANTED)
             {
+                // if we have been given permission we can transition to the HeartRate UI
                 activity?.let {
                     it.supportFragmentManager?.beginTransaction()?.replace(R.id.frameLayout, HeartBeatMonitorFragment(), "")
                         ?.addToBackStack("true")?.commit()
@@ -171,35 +181,39 @@ class ExerciseMainFragment : Fragment(), SensorEventListener
             {
                 activity?.let {
                     //User has not granted permissions, so do not add any listeners for the requested sensor
+                    // and display a toast letting user know that permission is required
                     Toast.makeText(it,"BODY SENSOR PERMISSION REQUIRED", Toast.LENGTH_SHORT).show()
                 }
             }
         }
     }
 
+    // Returns the average heart rate for the logged in user
     private fun calculateAverageHeartRate() : Int
     {
         activity?.let {
-            var sharedPreferences = it.getSharedPreferences(Consts.USER_PREFS, AppCompatActivity.MODE_PRIVATE)
-            var userId = sharedPreferences.getInt(Consts.PREFS_USER_ID, -1)
+            val sharedPreferences = it.getSharedPreferences(Consts.USER_PREFS, AppCompatActivity.MODE_PRIVATE)
+            val userId = sharedPreferences.getInt(Consts.PREFS_USER_ID, -1)
 
+            // gran the user heart rate data from the heart rate database
             val data = heartRateDatabaseOpenHelper?.getUserHeartRateData(userId)
 
             var averageHeartRate = 0
 
+            // loop through the data list
             for(i in 0 until data!!.size)
             {
+                // add all heart rate values
                 averageHeartRate += data[i]
             }
 
+            // check that the size is greater than 0 so that we don't divide by 0
             if( data.size > 0 )
             {
+                // work out the average and return
                 return averageHeartRate / data.size
             }
-
-            return averageHeartRate
         }
-
         return 0
     }
 }

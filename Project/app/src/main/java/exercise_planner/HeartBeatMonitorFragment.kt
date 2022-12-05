@@ -31,12 +31,15 @@ class HeartBeatMonitorFragment : Fragment(), SensorEventListener
 
     private var userId = 0
 
+    // Database name
+    private val dbName = Consts.HEART_RATE_DATABASE + ".db"
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
 
-        var binding = FragmentHeartBeatMonitorBinding.inflate(layoutInflater, container, false)
+        val binding = FragmentHeartBeatMonitorBinding.inflate(layoutInflater, container, false)
 
         return binding.root
     }
@@ -45,12 +48,15 @@ class HeartBeatMonitorFragment : Fragment(), SensorEventListener
         super.onStart()
 
         activity?.let {
+
+            // set up sensor manager
             sensorManager = it.getSystemService(Context.SENSOR_SERVICE) as SensorManager
 
-            //TODO: Replace name with const from Const file
-            heartRateDatabaseOpenHelper = HeartRateDatabaseOpenHelper(it, "heart_rate_test.db", null, 1)
+            // set up heart rate database
+            heartRateDatabaseOpenHelper = HeartRateDatabaseOpenHelper(it, dbName, null, 1)
 
-            var sharedPreferences = it.getSharedPreferences(Consts.USER_PREFS, AppCompatActivity.MODE_PRIVATE)
+            // grab userId from shared prefs
+            val sharedPreferences = it.getSharedPreferences(Consts.USER_PREFS, AppCompatActivity.MODE_PRIVATE)
 
             userId = sharedPreferences.getInt(Consts.PREFS_USER_ID, -1)
         }
@@ -67,12 +73,15 @@ class HeartBeatMonitorFragment : Fragment(), SensorEventListener
             // Get and Set up Heartbeat Sensor
             heartRateSensor = sensorManager?.getDefaultSensor(Sensor.TYPE_HEART_RATE)
 
+            // verify the device has the hear rate sensor
             if(heartRateSensor == null)
             {
+                // display notification if the device does not support the heart rate sensor
                 Toast.makeText(it,"Step Sensor Not Supported On This Device", Toast.LENGTH_SHORT).show()
             }
             else
             {
+                // add listener to heart rate sensor
                 sensorManager?.registerListener(this, heartRateSensor, SensorManager.SENSOR_DELAY_FASTEST)
                 Log.d("Exercise Fragment", "Registering Listener to HeartBeat Sensor")
             }
@@ -82,15 +91,19 @@ class HeartBeatMonitorFragment : Fragment(), SensorEventListener
     override fun onPause() {
         super.onPause()
 
+        // remove listener
         sensorManager?.unregisterListener(this, heartRateSensor)
     }
 
     override fun onSensorChanged(event: SensorEvent?) {
 
+        // grab the heart rate from the sensor
         val currentHeartRate = event!!.values[0].toInt()
+        // display the current heart rate to the user
         heartRateText?.text = getString(R.string.shared_single_value_int, currentHeartRate)
         Log.d("Exercise Fragment", "Current Heart Rate : $currentHeartRate")
 
+        // store the heart rate to the database
         heartRateDatabaseOpenHelper?.insertData(currentHeartRate, userId)
     }
 
