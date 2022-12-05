@@ -17,6 +17,7 @@ import shared.Consts
 
 class SettingsFragment : Fragment()
 {
+    // UI Variables
     private var logOutButton: Button? = null
     private var emailTextView: TextView? = null
     private var displayNameTextView: TextView? = null
@@ -37,11 +38,14 @@ class SettingsFragment : Fragment()
         emailTextView = view?.findViewById(R.id.loggedInUserTextView)
         displayNameTextView = view?.findViewById(R.id.loggedInUserDisplayName)
 
+        // grab user data from the passed arguments
         val localUserData = arguments?.getSerializable(Consts.LOCAL_USER_DATA) as LocalUserData
 
+        // display user data
         emailTextView?.text = getString(R.string.user_email_text, localUserData.userEmail)
         displayNameTextView?.text = getString(R.string.user_email_text, localUserData.userDisplayName)
 
+        // set up listener for logout button
         logOutButton = view?.findViewById(R.id.logOutBtn)
         logOutButton?.setOnClickListener { logOut() }
     }
@@ -49,15 +53,21 @@ class SettingsFragment : Fragment()
     private fun logOut()
     {
         activity?.let {
+
+            // grab the shared prefs
             val sharedPreferences = it.getSharedPreferences(Consts.USER_PREFS, AppCompatActivity.MODE_PRIVATE)
             val editor = sharedPreferences.edit()
 
             editor.apply {
+                // flag the user as logged out
                 putBoolean(Consts.PREFS_LOGGED_IN, false)
             }.apply()
 
+            // bring user back to login act
             val intent = Intent(it, LoginActivity::class.java)
             startActivity(intent)
+
+            // close main activity
             it.finish()
         }
     }
