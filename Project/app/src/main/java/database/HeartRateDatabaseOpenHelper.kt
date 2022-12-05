@@ -20,6 +20,7 @@ class HeartRateDatabaseOpenHelper(context: Context, name: String, factory: SQLit
 
     private val DROP_TABLE: String = "DROP TABLE IF EXISTS $dbName"
 
+    // create writable and readable database
     private val wb = this.writableDatabase
     private val rb = this.readableDatabase
 
@@ -32,39 +33,51 @@ class HeartRateDatabaseOpenHelper(context: Context, name: String, factory: SQLit
         p0?.execSQL(CREATE_TABLE)
     }
 
+    // Returns true if the insert query was successful
     fun insertData(heartRate: Int, userId: Int) : Boolean
     {
+        // content values for the database entry
         val newHeartRateEntry: ContentValues = ContentValues().apply{
             put("HEART_RATE", heartRate)
             put("USER_ID", userId)
         }
 
+        // add new data and store the result
         val result = wb.insert(dbName, null, newHeartRateEntry)
 
+        // check if the insert query
         if(result == -1L)
         {
+            // insert data failed return false
             Log.d("Heart Rate Database Helper:", "Insert Data Failed")
             return false
         }
 
+        // insert data successful, return true
         return true
     }
 
+    // Returns a list of all user heart rate data
     fun getUserHeartRateData(userId: Int) : ArrayList<Int>
     {
+        // query the database to get all heart rate data linked to the provided userId
         val userID = arrayOf(userId.toString())
         val cursor = rb.rawQuery("SELECT * FROM $dbName WHERE USER_ID = ? ", userID)
 
+        // store data
         val userHeartRateData = ArrayList<Int>()
 
+        // loop through data found
         cursor.moveToFirst()
         for(i in 0 until cursor.count)
         {
+            // Add all data to list
             Log.d("Heart Rate Database","User Id for Logged In User Is ${cursor.getInt(2)}")
             userHeartRateData.add(cursor.getInt(1))
             cursor.moveToNext()
         }
 
+        // close cursor and return list of heart rate data
         cursor.close()
         return userHeartRateData
     }
