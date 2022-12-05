@@ -22,6 +22,7 @@ class GoalDatabaseOpenHelper(context: Context, name: String, factory: SQLiteData
     private val having: String? = null
     private val order_by: String? = null
 
+    // create table sql query for the goal database
     private val CREATE_TABLE :String = "CREATE TABLE $tableName(" +
             "GOAL_ID integer PRIMARY KEY AUTOINCREMENT," +
             "GOAL_TYPE integer," +
@@ -31,22 +32,28 @@ class GoalDatabaseOpenHelper(context: Context, name: String, factory: SQLiteData
             "USER_ID integer, FOREIGN KEY('USER_ID') REFERENCES user_database(ID)" +
             ")"
 
+    // drop table sql query for the goal database
     private val DROP_TABLE: String = "DROP TABLE IF EXISTS $tableName"
 
+    // create a writable and readable database
     private val wb = this.writableDatabase
     private val rb = this.readableDatabase
 
+    // create database
     override fun onCreate(p0: SQLiteDatabase?) {
         p0?.execSQL(CREATE_TABLE)
     }
 
+    // update database
     override fun onUpgrade(p0: SQLiteDatabase?, p1: Int, p2: Int) {
         p0?.execSQL(DROP_TABLE)
         p0?.execSQL(CREATE_TABLE)
     }
 
+    // returns true if the insert query returns successful, false otherwise
     fun createGoal(goalType: Int, goalName: String, goalTarget: String, goalCurrent: String, userId: Int) : Boolean
     {
+        // content values with all the provided data
         val newGoal: ContentValues = ContentValues().apply {
             put("GOAL_TYPE", goalType)
             put("GOAL_NAME", goalName)
@@ -55,17 +62,23 @@ class GoalDatabaseOpenHelper(context: Context, name: String, factory: SQLiteData
             put("USER_ID", userId)
         }
 
+        // add new data to the database
+        // store the result value
         val result = wb.insert(tableName, null, newGoal)
 
+        // check if the insert query was successful
         if(result == -1L)
         {
+            // return false if the query failed
             Log.d("Goal Database Helper:", "Insert Data Failed")
             return false
         }
 
+        // return true otherwise
         return true
     }
 
+    // returns list of goals tied to the provided user id
     fun fetchGoals(userId: Int) : ArrayList<GoalDataModel>
     {
         // Create variable to store all the goals
@@ -73,44 +86,54 @@ class GoalDatabaseOpenHelper(context: Context, name: String, factory: SQLiteData
 
         where_args = arrayOf(userId.toString())
 
+        // query the database to get all goals linked to the provided user id
         val c: Cursor = rb.query(tableName, columns, where, where_args, group_by, having, order_by)
 
+        // loop through the data found
         c.moveToFirst()
         for(i in 0 until c.count)
         {
+            // add the goals to the userGoals list
             userGoals.add(GoalDataModel(c.getInt(0), 0, 0, c.getString(2),0f))
             c.moveToNext()
         }
 
+        // close the cursor and return the user goals list
         c.close()
-
         return  userGoals
     }
 
+    // return true if the update query was successful, false otherwise
     fun updateGoal(goalId: Int, updatedGoalName: String) : Boolean
     {
+        // where args for the update query
         val where = "GOAL_ID = ?"
         val whereArgs = arrayOf(goalId.toString())
 
+        // update the goal name for the selected goal
         val updatedGoalValues = ContentValues().apply {
             put("GOAL_NAME", updatedGoalName)
         }
 
+        // store the result
         val result = wb.update(tableName, updatedGoalValues, where, whereArgs)
 
+        // check if the update query was successful
         if(result == -1)
         {
+            // return false if it failed
             Log.d("Goal Database Helper:", "Update Data Failed")
             return false
         }
 
+        // true otherwise
         return true
     }
 
+    // removes the goal with the provided id from the database
     fun removeGoal(goalId: Int)
     {
         val query = "DELETE FROM $tableName WHERE GOAL_ID='$goalId'"
-
-        val result = wb.execSQL(query)
+        wb.execSQL(query)
     }
 }

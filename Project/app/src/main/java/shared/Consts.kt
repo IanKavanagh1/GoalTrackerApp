@@ -1,5 +1,7 @@
 package shared
 
+// Static object to store all constant values used throughout the app
+// so that we have only one place to update if we need to
 object Consts
 {
     // User Preferences

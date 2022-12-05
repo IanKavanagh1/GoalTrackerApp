@@ -5,19 +5,20 @@ import android.content.Context
 import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
 import android.util.Log
+import shared.Consts
 
 class HeartRateDatabaseOpenHelper(context: Context, name: String, factory: SQLiteDatabase.CursorFactory?,
                                 version: Int) : SQLiteOpenHelper(context, name, factory, version)
 {
-    // TODO: Use database name from Const File
+    private val dbName = Consts.HEART_RATE_DATABASE
 
-    private val CREATE_TABLE :String = "CREATE TABLE heart_rate_test(" +
+    private val CREATE_TABLE :String = "CREATE TABLE $dbName(" +
             "ID integer PRIMARY KEY AUTOINCREMENT," +
             "HEART_RATE integer," +
-            "USER_ID integer, FOREIGN KEY('USER_ID') REFERENCES account_details(ID)" +
+            "USER_ID integer, FOREIGN KEY('USER_ID') REFERENCES user_database(ID)" +
             ")"
 
-    private val DROP_TABLE: String = "DROP TABLE IF EXISTS heart_rate_test"
+    private val DROP_TABLE: String = "DROP TABLE IF EXISTS $dbName"
 
     private val wb = this.writableDatabase
     private val rb = this.readableDatabase
@@ -31,15 +32,14 @@ class HeartRateDatabaseOpenHelper(context: Context, name: String, factory: SQLit
         p0?.execSQL(CREATE_TABLE)
     }
 
-    public fun insertData(heartRate: Int, userId: Int) : Boolean
+    fun insertData(heartRate: Int, userId: Int) : Boolean
     {
         val newHeartRateEntry: ContentValues = ContentValues().apply{
             put("HEART_RATE", heartRate)
             put("USER_ID", userId)
         }
 
-        //TODO: Replace name with const from Const file
-        var result = wb.insert("heart_rate_test", null, newHeartRateEntry)
+        val result = wb.insert(dbName, null, newHeartRateEntry)
 
         if(result == -1L)
         {
@@ -50,10 +50,10 @@ class HeartRateDatabaseOpenHelper(context: Context, name: String, factory: SQLit
         return true
     }
 
-    public fun getUserHeartRateData(userId: Int) : ArrayList<Int>
+    fun getUserHeartRateData(userId: Int) : ArrayList<Int>
     {
-        var userID = arrayOf(userId.toString())
-        var cursor = rb.rawQuery("SELECT * FROM heart_rate_test WHERE USER_ID = ? ", userID)
+        val userID = arrayOf(userId.toString())
+        val cursor = rb.rawQuery("SELECT * FROM $dbName WHERE USER_ID = ? ", userID)
 
         val userHeartRateData = ArrayList<Int>()
 
@@ -64,6 +64,8 @@ class HeartRateDatabaseOpenHelper(context: Context, name: String, factory: SQLit
             userHeartRateData.add(cursor.getInt(1))
             cursor.moveToNext()
         }
+
+        cursor.close()
         return userHeartRateData
     }
 }
