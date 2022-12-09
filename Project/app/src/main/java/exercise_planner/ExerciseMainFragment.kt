@@ -40,7 +40,7 @@ class ExerciseMainFragment : Fragment(), SensorEventListener
     private var goToRunFragButton: Button? = null
 
     // Database name
-    private val dbName = Consts.EXERCISE_DATABASE + ".db"
+    private val dbName = Consts.HEART_RATE_DATABASE + ".db"
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,

@@ -103,8 +103,13 @@ class HeartBeatMonitorFragment : Fragment(), SensorEventListener
         heartRateText?.text = getString(R.string.shared_single_value_int, currentHeartRate)
         Log.d("Exercise Fragment", "Current Heart Rate : $currentHeartRate")
 
-        // store the heart rate to the database
-        heartRateDatabaseOpenHelper?.insertData(currentHeartRate, userId)
+        // Only add heart rate once the sensor has picked up a reading
+        // to avoid adding a lot of 0's while the sensor is trying to get a reading
+        if( currentHeartRate > 0 )
+        {
+            // store the heart rate to the database
+            heartRateDatabaseOpenHelper?.insertData(currentHeartRate, userId)
+        }
     }
 
     override fun onAccuracyChanged(p0: Sensor?, p1: Int) {
