@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Goal Tracker</string>
+    <string name="app_name">The Fitness App</string>
     <string name="welcome_label">Welcome!</string>
     <string name="welcome_back_label">Welcome Back, %s!</string>
     <string name="tip">Create an Account to Get Started</string>
@@ -41,7 +41,6 @@
     <string name="total_run_time">Total Run Time:</string>
     <string name="distance_covered">Total Distance Covered:</string>
     <string name="distance_value">%1$.1f KMs</string>
-    <string name="to_do_run_ui">TODO: PLOT RUN ON MAP AND DISPLAY HERE</string>
     <string name="shared_single_value_int">%1$d</string>
     <string name="shared_single_value_dec">%1$.1f</string>
     <string name="calorie_value">%1$.1f kcal</string>
