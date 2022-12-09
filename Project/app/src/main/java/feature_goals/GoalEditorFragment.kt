@@ -34,13 +34,6 @@ class GoalEditorFragment : Fragment() {
     override fun onStart() {
         super.onStart()
 
-        activity?.let {
-
-            //TODO: Confirm this is needed
-            // Set up database
-            GoalManager.setUpDatabase(it)
-        }
-
         selectedGoalName = view?.findViewById(R.id.selectedGoalName)
 
         // grab the selected goal from shared arguments
