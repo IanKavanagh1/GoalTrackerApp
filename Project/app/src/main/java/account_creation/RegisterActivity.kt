@@ -97,7 +97,7 @@ class RegisterActivity : AppCompatActivity()
                     }.apply()
 
                     // go to main act and shared the local user data so the main act can use it
-                    goToMainActivity(LocalUserData(id, userEmail, userDisplayName))
+                    goToMainActivity(LocalUserData(id, userEmail, userDisplayName, userPassword))
                 }
                 else
                 {

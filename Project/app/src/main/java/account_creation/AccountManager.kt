@@ -55,9 +55,9 @@ object AccountManager
 
     // Returns an Array of strings with the email and display name for the user,
     // an empty array if the user is not found
-    fun getUserEmailAndDisplayName(userId: Int) : Array<String>
+    fun getUserEmailDisplayNameAndPassword(userId: Int) : Array<String>
     {
         // Try to get the email and display name for the provided userId
-        return accountDatabaseOpenHelper.getUserEmailAndDisplayName(userId)
+        return accountDatabaseOpenHelper.getUserEmailDisplayNameAndPassword(userId)
     }
 }

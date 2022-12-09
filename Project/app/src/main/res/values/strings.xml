@@ -51,6 +51,7 @@
     <string name="end_location_loading">Searching For Current Location...</string>
     <string name="user_email">Email:</string>
     <string name="user_name">Display Name:</string>
+    <string name="user_password">Password:</string>
     <string name="user_email_text">%s</string>
     <string name="toggle_dark_mode">Enable Dark Mode</string>
     <string name="toggle">Dark Mode</string>

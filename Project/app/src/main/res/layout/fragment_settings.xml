@@ -31,17 +31,30 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/textView12" />
 
+
+        <TextView
+            android:id="@+id/textView4"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="40dp"
+            android:layout_marginTop="60dp"
+            android:text="@string/user_password"
+            android:textSize="20sp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/textView" />
+
         <TextView
             android:id="@+id/loggedInUserTextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginStart="36dp"
             android:layout_marginTop="100dp"
             android:text="@string/user_email_text"
             android:textSize="20sp"
-            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/editEmailButton"
+            app:layout_constraintHorizontal_bias="0.442"
             app:layout_constraintStart_toEndOf="@+id/textView12"
             app:layout_constraintTop_toTopOf="parent" />
-
 
         <TextView
             android:id="@+id/loggedInUserDisplayName"
@@ -50,23 +63,69 @@
             android:layout_marginTop="60dp"
             android:text="@string/user_email_text"
             android:textSize="20sp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.331"
+            app:layout_constraintEnd_toStartOf="@+id/editDisplayNameButton"
+            app:layout_constraintHorizontal_bias="0.305"
             app:layout_constraintStart_toEndOf="@+id/textView"
             app:layout_constraintTop_toBottomOf="@+id/loggedInUserTextView" />
+
+        <TextView
+            android:id="@+id/loggedInUserPassword"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="60dp"
+            android:text="@string/user_email_text"
+            android:textSize="20sp"
+            app:layout_constraintEnd_toStartOf="@+id/editPasswordButton"
+            app:layout_constraintHorizontal_bias="0.433"
+            app:layout_constraintStart_toEndOf="@+id/textView4"
+            app:layout_constraintTop_toBottomOf="@+id/loggedInUserDisplayName"
+            android:password="true"/>
 
         <Button
             android:id="@+id/logOutBtn"
             android:layout_width="215dp"
             android:layout_height="48dp"
             android:layout_marginStart="161dp"
-            android:layout_marginTop="248dp"
+            android:layout_marginTop="280dp"
             android:layout_marginEnd="162dp"
             android:text="@string/logout"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.496"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/textView12" />
+            app:layout_constraintTop_toBottomOf="@+id/loggedInUserPassword" />
+
+        <ImageButton
+            android:id="@+id/editEmailButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="84dp"
+            android:layout_marginEnd="16dp"
+            android:minHeight="48dp"
+            android:src="@drawable/ic_baseline_edit_24"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <ImageButton
+            android:id="@+id/editDisplayNameButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="40dp"
+            android:layout_marginEnd="16dp"
+            android:minHeight="48dp"
+            android:src="@drawable/ic_baseline_edit_24"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/editEmailButton" />
+
+        <ImageButton
+            android:id="@+id/editPasswordButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="40dp"
+            android:layout_marginEnd="16dp"
+            android:minHeight="48dp"
+            android:src="@drawable/ic_baseline_edit_24"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/editDisplayNameButton" />
 
     </android.support.constraint.ConstraintLayout>
 

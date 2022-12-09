@@ -41,10 +41,10 @@ class LoginActivity : AppCompatActivity()
 
             // Get the email and display name from the AccountManager using the userId from shared
             // prefs
-            val userEmailAndDisplay = AccountManager.getUserEmailAndDisplayName(id)
+            val userEmailDisplayAndPassword = AccountManager.getUserEmailDisplayNameAndPassword(id)
 
             // Transition to the main app (auto-login)
-            goToMainActivity(LocalUserData(id, userEmailAndDisplay[0], userEmailAndDisplay[1]))
+            goToMainActivity(LocalUserData(id, userEmailDisplayAndPassword[0], userEmailDisplayAndPassword[2], userEmailDisplayAndPassword[1]))
         }
 
         // Gather all the UI elements
@@ -105,7 +105,7 @@ class LoginActivity : AppCompatActivity()
 
                 // Transition to the main activity and pass in the Local User data
                 // so that the main activity can access it without needing to call to a database
-                goToMainActivity(LocalUserData(id, userEmail, userDisplayName))
+                goToMainActivity(LocalUserData(id, userEmail, userDisplayName, userPassword))
             }
             else
             {

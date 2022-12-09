@@ -149,7 +149,7 @@ class AccountDatabaseOpenHelper(context: Context, name: String, factory: SQLiteD
     }
 
     // Returns a list of strings, an empty list if no user was found
-    fun getUserEmailAndDisplayName(userId : Int) : Array<String>
+    fun getUserEmailDisplayNameAndPassword(userId : Int) : Array<String>
     {
         // query the database to get the email and password for the provided userId
         val id = arrayOf(userId.toString())
@@ -162,12 +162,14 @@ class AccountDatabaseOpenHelper(context: Context, name: String, factory: SQLiteD
             // get the user email
             val userEmail = cursor.getString(1)
 
+            val userPassword = cursor.getString(2)
+
             // get the user display name
             val userDisplayName = cursor.getString(3)
 
             // close the cursor and return the list
             cursor.close()
-            return arrayOf(userEmail, userDisplayName)
+            return arrayOf(userEmail, userPassword, userDisplayName)
         }
 
         // close the cursor and return an empty list as not user was found
