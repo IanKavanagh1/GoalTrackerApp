@@ -9,6 +9,7 @@ object Consts
     const val PREFS_USER_ID = "userId"
     const val PREFS_USER_DISPLAY_NAME = "userDisplayName"
     const val PREFS_LOGGED_IN = "loggedIn"
+    const val PREFS_PREVIOUS_TOTAL_STEPS = "previous_total_steps"
 
     // Databases
     const val USER_DATABASE = "user_database"

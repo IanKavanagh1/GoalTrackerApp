@@ -10,7 +10,6 @@ import android.os.Bundle
 import android.support.v4.app.ActivityCompat
 import android.support.v4.app.Fragment
 import android.support.v7.app.AppCompatActivity
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -24,9 +23,8 @@ import shared.Consts
 
 class ExerciseMainFragment : Fragment(), SensorEventListener
 {
-    private var sensorManager: SensorManager? = null
-    private var running = false
-    private var heartRateDatabaseOpenHelper: HeartRateDatabaseOpenHelper? = null
+    private lateinit var sensorManager: SensorManager
+    private lateinit var heartRateDatabaseOpenHelper: HeartRateDatabaseOpenHelper
 
     // Step Sensor Variables
     private var totalSteps = 0f
@@ -34,10 +32,10 @@ class ExerciseMainFragment : Fragment(), SensorEventListener
     private var stepSensor: Sensor? = null
 
     // UI Variables
-    private var stepCounterText: TextView? = null
-    private var averageHeartRateText: TextView? = null
-    private var checkHeartRateBtn: Button? = null
-    private var goToRunFragButton: Button? = null
+    private lateinit var stepCounterText: TextView
+    private lateinit var averageHeartRateText: TextView
+    private lateinit var checkHeartRateBtn: Button
+    private lateinit var goToRunFragButton: Button
 
     // Database name
     private val dbName = Consts.HEART_RATE_DATABASE + ".db"
@@ -64,26 +62,27 @@ class ExerciseMainFragment : Fragment(), SensorEventListener
             heartRateDatabaseOpenHelper = HeartRateDatabaseOpenHelper(it, dbName, null, 1)
         }
 
-        stepCounterText = view?.findViewById(R.id.stepCounter)
-        checkHeartRateBtn = view?.findViewById(R.id.checkHeartRate)
+        stepCounterText = view!!.findViewById(R.id.stepCounter)
+        checkHeartRateBtn = view!!.findViewById(R.id.checkHeartRate)
 
-        checkHeartRateBtn?.setOnClickListener { goToCheckHeartRateFragment() }
+        checkHeartRateBtn.setOnClickListener { goToCheckHeartRateFragment() }
 
-        goToRunFragButton = view?.findViewById(R.id.runButton)
-        goToRunFragButton?.setOnClickListener { goToRunFragment() }
+        goToRunFragButton = view!!.findViewById(R.id.runButton)
+        goToRunFragButton.setOnClickListener { goToRunFragment() }
 
-        averageHeartRateText = view?.findViewById(R.id.averageHeartRate)
-        averageHeartRateText?.text = getString(R.string.shared_single_value_int, calculateAverageHeartRate())
+        averageHeartRateText = view!!.findViewById(R.id.averageHeartRate)
+        averageHeartRateText.text = getString(R.string.shared_single_value_int, calculateAverageHeartRate())
+
+        loadStepCounter()
+        resetStepCounter()
     }
 
     override fun onResume() {
         super.onResume()
 
         activity?.let {
-            running = true
-
             // Get and Set up Step Sensor
-            stepSensor = sensorManager?.getDefaultSensor(Sensor.TYPE_STEP_COUNTER)
+            stepSensor = sensorManager.getDefaultSensor(Sensor.TYPE_STEP_COUNTER)
 
             // verify the device has the step sensor
             if(stepSensor == null)
@@ -106,8 +105,7 @@ class ExerciseMainFragment : Fragment(), SensorEventListener
                 }
 
                 // once we have confirmed permission is granted we can register the listener
-                sensorManager?.registerListener(this, stepSensor, SensorManager.SENSOR_DELAY_FASTEST)
-                Log.d("Exercise Fragment", "Registering Listener to Step Sensor")
+                sensorManager.registerListener(this, stepSensor, SensorManager.SENSOR_DELAY_FASTEST)
             }
         }
     }
@@ -116,17 +114,15 @@ class ExerciseMainFragment : Fragment(), SensorEventListener
         super.onPause()
 
         // remove listener
-        sensorManager?.unregisterListener(this)
+        sensorManager.unregisterListener(this)
     }
 
     override fun onSensorChanged(event: SensorEvent?) {
-        if(running)
-        {
-            // grab the total steps from the senor and display
-            totalSteps = event!!.values[0]
-            val currentSteps = totalSteps.toInt() - previousTotalSteps.toInt()
-            stepCounterText?.text = getString(R.string.shared_single_value_int, currentSteps)
-        }
+
+        // grab the total steps from the senor and display
+        totalSteps = event!!.values[0]
+        val currentSteps = totalSteps.toInt() - previousTotalSteps.toInt()
+        stepCounterText.text = getString(R.string.shared_single_value_int, currentSteps)
     }
 
     override fun onAccuracyChanged(p0: Sensor?, p1: Int) {
@@ -196,12 +192,12 @@ class ExerciseMainFragment : Fragment(), SensorEventListener
             val userId = sharedPreferences.getInt(Consts.PREFS_USER_ID, -1)
 
             // gran the user heart rate data from the heart rate database
-            val data = heartRateDatabaseOpenHelper?.getUserHeartRateData(userId)
+            val data = heartRateDatabaseOpenHelper.getUserHeartRateData(userId)
 
             var averageHeartRate = 0
 
             // loop through the data list
-            for(i in 0 until data!!.size)
+            for(i in 0 until data.size)
             {
                 // add all heart rate values
                 averageHeartRate += data[i]
@@ -215,5 +211,44 @@ class ExerciseMainFragment : Fragment(), SensorEventListener
             }
         }
         return 0
+    }
+
+    private fun resetStepCounter()
+    {
+        activity?.let {
+            val frag = it
+            stepCounterText.setOnClickListener {
+                Toast.makeText(frag, "Hold to reset steps", Toast.LENGTH_SHORT).show()
+            }
+
+            stepCounterText.setOnLongClickListener{
+
+                previousTotalSteps = totalSteps
+                stepCounterText.text = getString(R.string.shared_single_value_int, 0)
+                saveStepCounter()
+
+                true
+            }
+        }
+    }
+
+    private fun saveStepCounter()
+    {
+        activity?.let {
+            val sharedPreferences = it.getSharedPreferences(Consts.USER_PREFS, Context.MODE_PRIVATE)
+            val editor = sharedPreferences.edit()
+
+            editor.putFloat(Consts.PREFS_PREVIOUS_TOTAL_STEPS, previousTotalSteps).apply()
+        }
+    }
+
+    private fun loadStepCounter()
+    {
+        activity?.let {
+            val sharedPreferences = it.getSharedPreferences(Consts.USER_PREFS, Context.MODE_PRIVATE)
+            val savedSteps = sharedPreferences.getFloat(Consts.PREFS_PREVIOUS_TOTAL_STEPS, 0f)
+
+            previousTotalSteps = savedSteps
+        }
     }
 }
