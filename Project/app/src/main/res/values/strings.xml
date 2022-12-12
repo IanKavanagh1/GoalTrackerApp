@@ -1,5 +1,27 @@
 <resources>
+    <!--Shared Strings-->
     <string name="app_name">The Fitness App</string>
+    <string name="shared_single_value_int">%1$d</string>
+    <string name="shared_single_value_dec">%1$.1f</string>
+
+    <!--Goal Feature Strings-->
+    <string name="edit_goals">Edit Goals</string>
+    <string name="create_goals">Create Goal</string>
+    <string name="add_goal">Add Goal</string>
+    <string name="started_label">Let\'s Create a Goal To Get Started</string>
+    <string name="goal_name">Goal Name</string>
+    <string name="goal_target">Goal Target</string>
+    <string name="goal_current">Goal Current</string>
+    <string name="goals_title">GOALS!</string>
+    <string name="goal_name_editor">%s</string>
+    <string name="update_goal_button">Update Goal</string>
+    <string name="delete_goal_button">Delete Goal</string>
+    <string name="mark_as_completed">Mark As Completed</string>
+    <string name="goal_type">Goal Type</string>
+    <string name="goal_progress">Goal Progress</string>
+    <string name="goal_progress_value">%.1f</string>
+
+    <!--Account Feature Strings-->
     <string name="welcome_label">Welcome!</string>
     <string name="welcome_back_label">Welcome Back, %s!</string>
     <string name="tip">Create an Account to Get Started</string>
@@ -10,26 +32,17 @@
     <string name="enter_password">Enter Password </string>
     <string name="failed_login">Failed To Login!</string>
     <string name="retry_login">Retry</string>
-    <string name="edit_goals">Edit Goals</string>
-    <string name="create_goals">Create Goal</string>
-    <string name="add_goal">Add Goal</string>
-    <string name="started_label">Let\'s Create a Goal To Get Started</string>
-    <string name="goal_name">Goal Name</string>
-    <string name="goal_target">Goal Target</string>
-    <string name="goal_current">Goal Current</string>
-    <string name="meal_frag">Meal Fragment - Coming in Milestone 2</string>
-    <string name="exercise_frag">Exercise Fragment - Coming in Milestone 2</string>
-    <string name="settings_frag">Settings Fragment - Coming in Milestone 2</string>
-    <string name="goal_manage_frag">Goal Management Fragment - Coming in Milestone 2</string>
-    <string name="goals_title">GOALS!</string>
     <string name="enter_display_name">Enter Display Name</string>
     <string name="create_new_acc">Need an Account?</string>
     <string name="have_acc">Already Have an Account? Login</string>
-    <string name="logout">Log Out</string>
-    <string name="back">Back</string>
+    <string name="user_email">Email:</string>
+    <string name="user_name">Display Name:</string>
+    <string name="user_password">Password:</string>
+    <string name="user_email_text">%s</string>
+
+    <!--Exercise Feature Strings-->
     <string name="total_steps">Total Steps</string>
     <string name="av_heart_beat">Average Heart Rate</string>
-    <string name="burned_cals">Total Burned Calories</string>
     <string name="check_heart">Check Heart Rate</string>
     <string name="heart_rate">Heart Rate</string>
     <string name="start_exercise">Start Exercise</string>
@@ -41,28 +54,17 @@
     <string name="total_run_time">Total Run Time:</string>
     <string name="distance_covered">Total Distance Covered:</string>
     <string name="distance_value">%1$.1f KMs</string>
-    <string name="shared_single_value_int">%1$d</string>
-    <string name="shared_single_value_dec">%1$.1f</string>
-    <string name="calorie_value">%1$.1f kcal</string>
+
+    <!--Settings Feature Strings-->
+    <string name="logout">Log Out</string>
+
+    <!--Misc Strings-->
     <string name="time_hours_minutes_seconds_formatter">%2dh:%2dm:%2ds</string>
     <string name="time_minutes_seconds_formatter">%2dm:%2ds</string>
     <string name="time_seconds_formatter">%2ds</string>
     <string name="end_location_loading">Searching For Current Location...</string>
-    <string name="user_email">Email:</string>
-    <string name="user_name">Display Name:</string>
-    <string name="user_password">Password:</string>
-    <string name="user_email_text">%s</string>
-    <string name="toggle_dark_mode">Enable Dark Mode</string>
-    <string name="toggle">Dark Mode</string>
-    <string name="goal_name_editor">%s</string>
-    <string name="update_goal_button">Update Goal</string>
-    <string name="delete_goal_button">Delete Goal</string>
     <string name="home_menu_item">Home</string>
     <string name="exercise_menu_item">Exercise</string>
     <string name="settings_menu_item">Settings</string>
     <string name="confirm_button">Confirm</string>
-    <string name="mark_as_completed">Mark As Completed</string>
-    <string name="goal_type">Goal Type</string>
-    <string name="goal_progress">Goal Progress</string>
-    <string name="goal_progress_value">%.1f</string>
 </resources>
