@@ -21,6 +21,7 @@ class GoalManagementFragment : Fragment(), GoalRecyclerViewInterface
     private lateinit var layoutManager: LinearLayoutManager
     private lateinit var addGoalBtn: Button
     private lateinit var welcomeBackTextView: TextView
+    private lateinit var emptyGoalsTextView: TextView
 
     private var userGoals : ArrayList<GoalDataModel>? = null
     private var localUser: LocalUserData? = null
@@ -42,6 +43,7 @@ class GoalManagementFragment : Fragment(), GoalRecyclerViewInterface
         welcomeBackTextView = view!!.findViewById(R.id.welcomeBackTV)
         addGoalBtn = view!!.findViewById(R.id.addGoalBtn)
         goalListView = view!!.findViewById(R.id.goal_recycler_view)
+        emptyGoalsTextView = view!!.findViewById(R.id.emptyGoals)
 
         activity?.let {
 
@@ -51,6 +53,16 @@ class GoalManagementFragment : Fragment(), GoalRecyclerViewInterface
 
             // grab user goals from passed in arguments
             userGoals = arguments?.getSerializable(Consts.USER_GOALS) as ArrayList<GoalDataModel>
+
+            // Display an empty goals message if the user has no goals
+            if(userGoals!!.size < 1)
+            {
+                emptyGoalsTextView.visibility = View.VISIBLE
+            }
+            else
+            {
+                emptyGoalsTextView.visibility = View.INVISIBLE
+            }
 
             // set up list of goals
             adapter = GoalRecyclerViewAdapter(it, userGoals!!, this)

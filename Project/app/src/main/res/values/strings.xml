@@ -20,6 +20,7 @@
     <string name="goal_type">Goal Type</string>
     <string name="goal_progress">Goal Progress</string>
     <string name="goal_progress_value">%.1f</string>
+    <string name="empty_goals">No Goals, Please Add Some!</string>
 
     <!--Account Feature Strings-->
     <string name="welcome_label">Welcome!</string>
