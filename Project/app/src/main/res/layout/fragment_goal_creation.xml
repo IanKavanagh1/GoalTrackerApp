@@ -27,7 +27,7 @@
             <EditText
                 android:id="@+id/gName"
                 android:layout_width="340dp"
-                android:layout_height="42dp"
+                android:layout_height="48dp"
                 android:layout_marginTop="15dp"
                 android:text="@string/goal_name"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -38,7 +38,7 @@
             <EditText
                 android:id="@+id/gTarget"
                 android:layout_width="340dp"
-                android:layout_height="42dp"
+                android:layout_height="48dp"
                 android:layout_marginTop="15dp"
                 android:text="@string/goal_target"
                 app:layout_constraintEnd_toEndOf="parent"

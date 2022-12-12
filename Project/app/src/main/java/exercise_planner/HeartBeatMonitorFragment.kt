@@ -25,9 +25,9 @@ class HeartBeatMonitorFragment : Fragment(), SensorEventListener
 
     // Heartbeat Sensor Variables
     private var heartRateSensor: Sensor? = null
-    private var heartRateText: TextView? = null
+    private lateinit var heartRateText: TextView
 
-    private var heartRateDatabaseOpenHelper: HeartRateDatabaseOpenHelper? = null
+    private lateinit var heartRateDatabaseOpenHelper: HeartRateDatabaseOpenHelper
 
     private var userId = 0
 
@@ -61,8 +61,8 @@ class HeartBeatMonitorFragment : Fragment(), SensorEventListener
             userId = sharedPreferences.getInt(Consts.PREFS_USER_ID, -1)
         }
 
-        heartRateText = view?.findViewById(R.id.currentHeartRateText)
-        heartRateText?.text = getString(R.string.shared_single_value_int, 0)
+        heartRateText = view!!.findViewById(R.id.currentHeartRateText)
+        heartRateText.text = getString(R.string.shared_single_value_int, 0)
     }
 
     override fun onResume() {
@@ -100,7 +100,7 @@ class HeartBeatMonitorFragment : Fragment(), SensorEventListener
         // grab the heart rate from the sensor
         val currentHeartRate = event!!.values[0].toInt()
         // display the current heart rate to the user
-        heartRateText?.text = getString(R.string.shared_single_value_int, currentHeartRate)
+        heartRateText.text = getString(R.string.shared_single_value_int, currentHeartRate)
         Log.d("Exercise Fragment", "Current Heart Rate : $currentHeartRate")
 
         // Only add heart rate once the sensor has picked up a reading
@@ -108,7 +108,7 @@ class HeartBeatMonitorFragment : Fragment(), SensorEventListener
         if( currentHeartRate > 0 )
         {
             // store the heart rate to the database
-            heartRateDatabaseOpenHelper?.insertData(currentHeartRate, userId)
+            heartRateDatabaseOpenHelper.insertData(currentHeartRate, userId)
         }
     }
 

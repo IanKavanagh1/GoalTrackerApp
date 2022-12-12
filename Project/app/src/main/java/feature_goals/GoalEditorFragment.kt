@@ -14,9 +14,9 @@ import shared.Consts
 
 class GoalEditorFragment : Fragment() {
 
-    private var selectedGoalName: TextView? = null
-    private var updateGoalButton: Button? = null
-    private var deleteGoalButton: Button? = null
+    private lateinit var selectedGoalName: TextView
+    private lateinit var updateGoalButton: Button
+    private lateinit var deleteGoalButton: Button
     private var localUser: LocalUserData? = null
 
     private var updatedGoalName = ""
@@ -34,7 +34,7 @@ class GoalEditorFragment : Fragment() {
     override fun onStart() {
         super.onStart()
 
-        selectedGoalName = view?.findViewById(R.id.selectedGoalName)
+        selectedGoalName = view!!.findViewById(R.id.selectedGoalName)
 
         // grab the selected goal from shared arguments
         val selectedGoal = arguments?.getSerializable(Consts.SELECTED_GOAL) as GoalDataModel
@@ -42,21 +42,21 @@ class GoalEditorFragment : Fragment() {
         // grab the local user data from the shared arguments
         localUser = arguments?.getSerializable(Consts.LOCAL_USER_DATA) as LocalUserData
 
-        selectedGoalName?.text = getString(R.string.goal_name_editor, selectedGoal.goalName)
+        selectedGoalName.text = getString(R.string.goal_name_editor, selectedGoal.goalName)
 
-        updateGoalButton = view?.findViewById(R.id.updateGoalButton)
+        updateGoalButton = view!!.findViewById(R.id.updateGoalButton)
 
-        updateGoalButton?.setOnClickListener { updateGoal(selectedGoal.goalId) }
+        updateGoalButton.setOnClickListener { updateGoal(selectedGoal.goalId) }
 
-        deleteGoalButton = view?.findViewById(R.id.deleteGoalButton)
+        deleteGoalButton = view!!.findViewById(R.id.deleteGoalButton)
 
-        deleteGoalButton?.setOnClickListener { deleteGoal(selectedGoal.goalId) }
+        deleteGoalButton.setOnClickListener { deleteGoal(selectedGoal.goalId) }
     }
 
     private fun updateGoal(goalId: Int)
     {
         // get the updated goal name from the user
-        updatedGoalName = selectedGoalName?.text.toString()
+        updatedGoalName = selectedGoalName.text.toString()
 
         // update goal
         GoalManager.updateGoal(goalId, updatedGoalName)

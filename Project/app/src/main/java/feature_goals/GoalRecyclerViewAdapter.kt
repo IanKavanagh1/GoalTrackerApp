@@ -1,7 +1,9 @@
 package feature_goals
 
 import android.content.Context
+import android.graphics.drawable.Icon
 import android.support.v7.widget.RecyclerView
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -29,10 +31,20 @@ class GoalRecyclerViewAdapter(context: Context, goalData: ArrayList<GoalDataMode
     override fun onBindViewHolder(p0: GoalViewHolder, p1: Int) {
 
         // Bind data to UI elements
-
-        //p0.goalIconView.setImageIcon(data.get(p1).iconId)
+        when(data[p1].goalType)
+        {
+            GoalTypes.Fitness.ordinal ->{
+                val icon = Icon.createWithResource(cont, R.drawable.ic_baseline_fitness_center_24)
+                p0.goalIconView.setImageIcon(icon)
+            }
+            GoalTypes.HealthEating.ordinal ->{
+                val icon = Icon.createWithResource(cont, R.drawable.ic_baseline_food_bank_24)
+                p0.goalIconView.setImageIcon(icon)
+            }
+        }
         p0.goalNameText.text = data[p1].goalName
         p0.goalProgressText.text = data[p1].goalProgress.toString()
+        p0.goalProgressText.visibility = View.INVISIBLE
     }
 
     override fun getItemCount(): Int

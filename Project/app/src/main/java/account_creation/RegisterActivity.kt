@@ -13,11 +13,11 @@ import shared.Consts
 class RegisterActivity : AppCompatActivity()
 {
     // Variables to store all the UI elements
-    private var registerButton: Button? = null
-    private var emailTextView: EditText? = null
-    private var passwordTextView: EditText? = null
-    private var displayNameTextView: EditText? = null
-    private var goToLoginActBtn: Button? = null
+    private lateinit var registerButton: Button
+    private lateinit var emailTextView: EditText
+    private lateinit var passwordTextView: EditText
+    private lateinit var displayNameTextView: EditText
+    private lateinit var goToLoginActBtn: Button
 
     // Variables to store the user data
     private var userEmail: String = ""
@@ -42,18 +42,18 @@ class RegisterActivity : AppCompatActivity()
         displayNameTextView = findViewById(R.id.editDisplayName)
 
         // set up listener for register button click
-        registerButton?.setOnClickListener { createAccount() }
+        registerButton.setOnClickListener { createAccount() }
 
         // set up listener for login button click
-        goToLoginActBtn?.setOnClickListener { goToLoginActivity() }
+        goToLoginActBtn.setOnClickListener { goToLoginActivity() }
     }
 
     private fun createAccount()
     {
         // Grab the email and password entered by the user
-        userEmail = emailTextView?.text.toString()
-        userPassword = passwordTextView?.text.toString()
-        userDisplayName = displayNameTextView?.text.toString()
+        userEmail = emailTextView.text.toString()
+        userPassword = passwordTextView.text.toString()
+        userDisplayName = displayNameTextView.text.toString()
 
         // Make sure they are not empty
         if(userEmail == "" || userPassword == "" || userDisplayName == "")

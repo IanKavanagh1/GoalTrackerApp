@@ -13,10 +13,10 @@ import shared.Consts
 class LoginActivity : AppCompatActivity()
 {
     // Variables to store all the UI elements
-    private var loginButton: Button? = null
-    private var emailTextView: EditText? = null
-    private var passwordTextView: EditText? = null
-    private var goToRegisterActBtn: Button? = null
+    private lateinit var loginButton: Button
+    private lateinit var emailTextView: EditText
+    private lateinit var passwordTextView: EditText
+    private lateinit var goToRegisterActBtn: Button
 
     // Variables to store the user data
     private var userEmail: String = ""
@@ -55,17 +55,17 @@ class LoginActivity : AppCompatActivity()
         passwordTextView = findViewById(R.id.editPassword)
 
         // set up listener for login button click
-        loginButton?.setOnClickListener { attemptLogin() }
+        loginButton.setOnClickListener { attemptLogin() }
 
         // set up listener for register button click
-        goToRegisterActBtn?.setOnClickListener { goToRegisterActivity() }
+        goToRegisterActBtn.setOnClickListener { goToRegisterActivity() }
     }
 
     private fun attemptLogin()
     {
         // Grab the email and password entered by the user
-        userEmail = emailTextView?.text.toString()
-        userPassword = passwordTextView?.text.toString()
+        userEmail = emailTextView.text.toString()
+        userPassword = passwordTextView.text.toString()
 
         // Make sure they are not empty
         if(userEmail == "" || userPassword == "" )
@@ -124,7 +124,7 @@ class LoginActivity : AppCompatActivity()
         finish()
     }
 
-    // Returns true if the loggedin flag from user prefs is true, false otherwise
+    // Returns true if the logged in flag from user prefs is true, false otherwise
     private fun checkIfUserIsLoggedIn() : Boolean
     {
         // check if the user is already logged in so that they will automatically go to the app

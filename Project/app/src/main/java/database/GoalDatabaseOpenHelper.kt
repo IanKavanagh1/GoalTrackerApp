@@ -94,7 +94,7 @@ class GoalDatabaseOpenHelper(context: Context, name: String, factory: SQLiteData
         for(i in 0 until c.count)
         {
             // add the goals to the userGoals list
-            userGoals.add(GoalDataModel(c.getInt(0), 0, 0, c.getString(2),0f))
+            userGoals.add(GoalDataModel(c.getInt(0), c.getInt(1), c.getString(2),0f))
             c.moveToNext()
         }
 
