@@ -176,4 +176,88 @@ class AccountDatabaseOpenHelper(context: Context, name: String, factory: SQLiteD
         cursor.close()
         return arrayOf()
     }
+
+    // Function to update the email for the provided userId
+    // Returns true if successful, false otherwise
+    fun updateEmail(userId: Int, updatedEmail: String) : Boolean
+    {
+        // where args for the update query
+        val where = "ID = ?"
+        val whereArgs = arrayOf(userId.toString())
+
+        // update the users email
+        val updatedAccountValues = ContentValues().apply {
+            put("USER_EMAIL", updatedEmail)
+        }
+
+        // store the result
+        val result = wb.update(tableName, updatedAccountValues, where, whereArgs)
+
+        // check if the update query was successful
+        if(result == -1)
+        {
+            // return false if it failed
+            Log.d("Account Database Helper:", "Update Data Failed")
+            return false
+        }
+
+        // true otherwise
+        return true
+    }
+
+    // Function to update the display name for the provided userId
+    // Returns true if successful, false otherwise
+    fun updateDisplayName(userId: Int, updatedDisplayName: String) : Boolean
+    {
+        // where args for the update query
+        val where = "ID = ?"
+        val whereArgs = arrayOf(userId.toString())
+
+        // update the users display name
+        val updatedAccountValues = ContentValues().apply {
+            put("USER_DISPLAY_NAME", updatedDisplayName)
+        }
+
+        // store the result
+        val result = wb.update(tableName, updatedAccountValues, where, whereArgs)
+
+        // check if the update query was successful
+        if(result == -1)
+        {
+            // return false if it failed
+            Log.d("Account Database Helper:", "Update Data Failed")
+            return false
+        }
+
+        // true otherwise
+        return true
+    }
+
+    // Function to update the password for the provided userId
+    // Returns true if successful, false otherwise
+    fun updatePassword(userId: Int, updatedPassword: String) : Boolean
+    {
+        // where args for the update query
+        val where = "ID = ?"
+        val whereArgs = arrayOf(userId.toString())
+
+        // update the users password
+        val updatedAccountValues = ContentValues().apply {
+            put("USER_PASSWORD", updatedPassword)
+        }
+
+        // store the result
+        val result = wb.update(tableName, updatedAccountValues, where, whereArgs)
+
+        // check if the update query was successful
+        if(result == -1)
+        {
+            // return false if it failed
+            Log.d("Account Database Helper:", "Update Data Failed")
+            return false
+        }
+
+        // true otherwise
+        return true
+    }
 }

@@ -1,6 +1,7 @@
 package account_creation
 
 import android.content.Context
+import android.util.Log
 import database.AccountDatabaseOpenHelper
 import shared.Consts
 
@@ -59,5 +60,23 @@ object AccountManager
     {
         // Try to get the email and display name for the provided userId
         return accountDatabaseOpenHelper.getUserEmailDisplayNameAndPassword(userId)
+    }
+
+    // Returns True if the update email query was successful, false otherwise
+    fun updateEmail(userId: Int, updatedEmail: String) : Boolean
+    {
+        return accountDatabaseOpenHelper.updateEmail(userId, updatedEmail)
+    }
+
+    // Returns True if the update name query was successful, false otherwise
+    fun updateDisplayName(userId: Int, updatedDisplayName: String) : Boolean
+    {
+        return accountDatabaseOpenHelper.updateDisplayName(userId, updatedDisplayName)
+    }
+
+    // Returns True if the update password query was successful, false otherwise
+    fun updatePassword(userId: Int, updatedPassword: String) : Boolean
+    {
+        return accountDatabaseOpenHelper.updatePassword(userId, updatedPassword)
     }
 }
