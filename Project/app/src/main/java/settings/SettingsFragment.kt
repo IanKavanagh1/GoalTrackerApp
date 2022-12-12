@@ -6,16 +6,17 @@ import android.content.Intent
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.support.v7.app.AppCompatActivity
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.ImageButton
 import android.widget.TextView
+import com.example.goal_tracker.EditTextDialog
 import com.example.goal_tracker.R
 import com.example.goal_tracker.databinding.FragmentSettingsBinding
 import shared.Consts
+import shared.EditableFieldType
 
 class SettingsFragment : Fragment()
 {
@@ -29,6 +30,8 @@ class SettingsFragment : Fragment()
     private lateinit var editEmailButton: ImageButton
     private lateinit var editDisplayNameButton: ImageButton
     private lateinit var editPasswordButton: ImageButton
+
+    private lateinit var editTextDialog: EditTextDialog
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -49,6 +52,10 @@ class SettingsFragment : Fragment()
 
         // grab user data from the passed arguments
         val localUserData = arguments?.getSerializable(Consts.LOCAL_USER_DATA) as LocalUserData
+
+        activity?.let {
+            editTextDialog = EditTextDialog(it, localUserData.userId)
+        }
 
         // display user data
         emailTextView.text = getString(R.string.user_email_text, localUserData.userEmail)
@@ -94,16 +101,16 @@ class SettingsFragment : Fragment()
 
     private fun editEmail()
     {
-        Log.d("Settings Frag","Edit Email")
+        editTextDialog.startDialog(EditableFieldType.Email)
     }
 
     private fun editDisplayName()
     {
-        Log.d("Settings Frag","Edit Display Name")
+        editTextDialog.startDialog(EditableFieldType.DisplayName)
     }
 
     private fun editPassword()
     {
-        Log.d("Settings Frag","Edit Password")
+        editTextDialog.startDialog(EditableFieldType.Password)
     }
 }
