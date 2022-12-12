@@ -16,11 +16,11 @@ import shared.Consts
 
 class GoalManagementFragment : Fragment(), GoalRecyclerViewInterface
 {
-    private var goalListView: RecyclerView? = null
-    private var adapter: GoalRecyclerViewAdapter? = null
-    private var layoutManager: LinearLayoutManager? = null
-    private var addGoalBtn: Button? = null
-    private var welcomeBackTextView: TextView? = null
+    private lateinit var goalListView: RecyclerView
+    private lateinit var adapter: GoalRecyclerViewAdapter
+    private lateinit var layoutManager: LinearLayoutManager
+    private lateinit var addGoalBtn: Button
+    private lateinit var welcomeBackTextView: TextView
 
     private var userGoals : ArrayList<GoalDataModel>? = null
     private var localUser: LocalUserData? = null
@@ -39,30 +39,30 @@ class GoalManagementFragment : Fragment(), GoalRecyclerViewInterface
     {
         super.onStart()
 
-        welcomeBackTextView = view?.findViewById(R.id.welcomeBackTV)
-        addGoalBtn = view?.findViewById(R.id.addGoalBtn)
-        goalListView = view?.findViewById(R.id.goal_recycler_view)
+        welcomeBackTextView = view!!.findViewById(R.id.welcomeBackTV)
+        addGoalBtn = view!!.findViewById(R.id.addGoalBtn)
+        goalListView = view!!.findViewById(R.id.goal_recycler_view)
 
         activity?.let {
 
             // grab user data from passed in arguments
             localUser = arguments?.getSerializable(Consts.LOCAL_USER_DATA) as LocalUserData
-            welcomeBackTextView?.text = getString(R.string.welcome_back_label, localUser?.userDisplayName)
+            welcomeBackTextView.text = getString(R.string.welcome_back_label, localUser?.userDisplayName)
 
             // grab user goals from passed in arguments
             userGoals = arguments?.getSerializable(Consts.USER_GOALS) as ArrayList<GoalDataModel>
 
             // set up list of goals
-            adapter = userGoals?.let{ it1 -> GoalRecyclerViewAdapter(it, it1, this) }
+            adapter = GoalRecyclerViewAdapter(it, userGoals!!, this)
 
             layoutManager = LinearLayoutManager(it)
         }
 
         // populate goal list
-        goalListView?.adapter = adapter
-        goalListView?.layoutManager = layoutManager
+        goalListView.adapter = adapter
+        goalListView.layoutManager = layoutManager
 
-        addGoalBtn?.setOnClickListener { goToCreationUI() }
+        addGoalBtn.setOnClickListener { goToCreationUI() }
     }
 
     private fun goToCreationUI()

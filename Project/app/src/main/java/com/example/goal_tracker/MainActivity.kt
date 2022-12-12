@@ -16,7 +16,7 @@ import shared.Consts
 class MainActivity : AppCompatActivity()
 {
     // Variables for act context and bundles
-    private var binding: ActivityMainBinding? = null
+    private lateinit var binding: ActivityMainBinding
 
     private val goalManagementFragment = GoalManagementFragment()
     private val goalBundle = Bundle()
@@ -30,7 +30,7 @@ class MainActivity : AppCompatActivity()
         GoalManager.setUpDatabase(this)
 
         binding = ActivityMainBinding.inflate(layoutInflater)
-        setContentView(binding?.root)
+        setContentView(binding.root)
 
         // get the user data provided by the login or register act
         localUserData = intent.getSerializableExtra(Consts.LOCAL_USER_DATA) as LocalUserData?
@@ -72,7 +72,7 @@ class MainActivity : AppCompatActivity()
         }
 
         // set up the bottom nav menu listeners
-        binding?.bottomNavigationView?.setOnNavigationItemSelectedListener {
+        binding.bottomNavigationView.setOnNavigationItemSelectedListener {
 
             // switch statement to update the fragment displayed based on the selected menu item
             when(it.itemId)

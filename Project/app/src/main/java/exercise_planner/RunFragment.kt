@@ -26,10 +26,10 @@ import kotlin.math.*
 
 class RunFragment : Fragment()
 {
-    private var startRunBtn: Button? = null
-    private var stopRunBtn: Button? = null
-    private var runTimeTextView: TextView? = null
-    private var totalDistanceTextView: TextView? = null
+    private lateinit var startRunBtn: Button
+    private lateinit var stopRunBtn: Button
+    private lateinit var runTimeTextView: TextView
+    private lateinit var totalDistanceTextView: TextView
 
     private var locationManager: LocationManager? = null
 
@@ -46,7 +46,7 @@ class RunFragment : Fragment()
     private var startLocationListener: LocationListener? = null
     private var endLocationListener: LocationListener? = null
 
-    private var exerciseDatabaseOpenHelper: ExerciseDatabaseOpenHelper? = null
+    private lateinit var exerciseDatabaseOpenHelper: ExerciseDatabaseOpenHelper
 
     private var userId = 0
 
@@ -74,17 +74,17 @@ class RunFragment : Fragment()
             userId = sharedPreferences.getInt(Consts.PREFS_USER_ID, -1)
         }
 
-        startRunBtn = view?.findViewById(R.id.startRunBtn)
-        stopRunBtn = view?.findViewById(R.id.stopRunBtn)
+        startRunBtn = view!!.findViewById(R.id.startRunBtn)
+        stopRunBtn = view!!.findViewById(R.id.stopRunBtn)
 
-        runTimeTextView = view?.findViewById(R.id.runTime)
-        totalDistanceTextView = view?.findViewById(R.id.distanceRan)
-        totalDistanceTextView?.text = getString(R.string.distance_value, 0.0)
+        runTimeTextView = view!!.findViewById(R.id.runTime)
+        totalDistanceTextView = view!!.findViewById(R.id.distanceRan)
+        totalDistanceTextView.text = getString(R.string.distance_value, 0.0)
 
-        runTimeTextView?.text = getString(R.string.shared_single_value_int, 0)
+        runTimeTextView.text = getString(R.string.shared_single_value_int, 0)
 
-        startRunBtn?.setOnClickListener { startRun() }
-        stopRunBtn?.setOnClickListener { stopRun()  }
+        startRunBtn.setOnClickListener { startRun() }
+        stopRunBtn.setOnClickListener { stopRun()  }
     }
 
     private fun startRun()
@@ -127,7 +127,7 @@ class RunFragment : Fragment()
             startLocationListener!!)
 
         startTime = System.currentTimeMillis()
-        runTimeTextView?.text = getString(R.string.shared_single_value_int, 0)
+        runTimeTextView.text = getString(R.string.shared_single_value_int, 0)
     }
 
     private fun stopRun()
@@ -168,13 +168,13 @@ class RunFragment : Fragment()
                     endLongitude)
 
                 // Display the total distance covered
-                totalDistanceTextView?.text = getString(R.string.distance_value, distance)
+                totalDistanceTextView.text = getString(R.string.distance_value, distance)
 
                 // Unsubscribe from event listener
                 locationManager?.removeUpdates(endLocationListener!!)
 
                 // Add data to database
-                exerciseDatabaseOpenHelper?.insertData(startLatitude, startLongitude, endLatitude,
+                exerciseDatabaseOpenHelper.insertData(startLatitude, startLongitude, endLatitude,
                     endLongitude, distance, totalRunTime, userId)
 
                 // Remove Loading Dialog
@@ -200,17 +200,17 @@ class RunFragment : Fragment()
         // Only display what is needed, i.e if hours and minutes are 0 only so seconds
         if(hours == 0L && minutes == 0L)
         {
-            runTimeTextView?.text = getString(R.string.time_seconds_formatter, seconds)
+            runTimeTextView.text = getString(R.string.time_seconds_formatter, seconds)
         }
         // only show minutes and seconds
         else if(hours == 0L && minutes > 0L)
         {
-            runTimeTextView?.text = getString(R.string.time_minutes_seconds_formatter, minutes, seconds)
+            runTimeTextView.text = getString(R.string.time_minutes_seconds_formatter, minutes, seconds)
         }
         // show hours minutes and seconds
         else
         {
-            runTimeTextView?.text = getString(R.string.time_hours_minutes_seconds_formatter, hours,
+            runTimeTextView.text = getString(R.string.time_hours_minutes_seconds_formatter, hours,
                 minutes, seconds)
         }
     }
