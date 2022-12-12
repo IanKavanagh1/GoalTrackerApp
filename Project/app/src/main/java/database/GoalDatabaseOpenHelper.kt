@@ -7,6 +7,7 @@ import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
 import android.util.Log
 import feature_goals.GoalDataModel
+import feature_goals.GoalTypes
 import shared.Consts
 
 class GoalDatabaseOpenHelper(context: Context, name: String, factory: SQLiteDatabase.CursorFactory?,
@@ -104,7 +105,7 @@ class GoalDatabaseOpenHelper(context: Context, name: String, factory: SQLiteData
     }
 
     // return true if the update query was successful, false otherwise
-    fun updateGoal(goalId: Int, updatedGoalName: String) : Boolean
+    fun updateGoal(goalId: Int, updatedGoalName: String, updatedGoalProgress: String, updatedGoalType: GoalTypes) : Boolean
     {
         // where args for the update query
         val where = "GOAL_ID = ?"
@@ -113,6 +114,8 @@ class GoalDatabaseOpenHelper(context: Context, name: String, factory: SQLiteData
         // update the goal name for the selected goal
         val updatedGoalValues = ContentValues().apply {
             put("GOAL_NAME", updatedGoalName)
+            put("GOAL_CURRENT", updatedGoalProgress)
+            put("GOAL_TYPE", updatedGoalType.ordinal)
         }
 
         // store the result

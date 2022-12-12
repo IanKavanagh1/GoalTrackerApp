@@ -29,9 +29,9 @@ object GoalManager
     }
 
     // Returns true if the update goal query was successful, false otherwise
-    fun updateGoal(goalId: Int, updatedGoalName: String) : Boolean
+    fun updateGoal(goalId: Int, updatedGoalName: String, updatedGoalProgress: String, updatedGoalType: GoalTypes) : Boolean
     {
-        return goalDatabaseOpenHelper.updateGoal(goalId, updatedGoalName)
+        return goalDatabaseOpenHelper.updateGoal(goalId, updatedGoalName, updatedGoalProgress, updatedGoalType)
     }
 
     // deletes the goal with the provided id

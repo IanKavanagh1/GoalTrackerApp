@@ -6,8 +6,7 @@ import android.support.v4.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
-import android.widget.TextView
+import android.widget.*
 import com.example.goal_tracker.R
 import com.example.goal_tracker.databinding.FragmentGoalEditorBinding
 import shared.Consts
@@ -15,11 +14,17 @@ import shared.Consts
 class GoalEditorFragment : Fragment() {
 
     private lateinit var selectedGoalName: TextView
+    private lateinit var selectedGoalProgress: TextView
+    private lateinit var selectedGoalType: Spinner
     private lateinit var updateGoalButton: Button
     private lateinit var deleteGoalButton: Button
     private var localUser: LocalUserData? = null
 
     private var updatedGoalName = ""
+    private var updatedGoalProgress = ""
+    private var updatedGoalType: GoalTypes? = null
+
+    private lateinit var adapter: ArrayAdapter<GoalTypes>
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -34,7 +39,28 @@ class GoalEditorFragment : Fragment() {
     override fun onStart() {
         super.onStart()
 
+        activity?.let {
+
+            // Set up Goal Type Drop Down
+            adapter = ArrayAdapter<GoalTypes>(it, android.R.layout.simple_spinner_item, GoalTypes.values())
+            adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+        }
+
         selectedGoalName = view!!.findViewById(R.id.selectedGoalName)
+        selectedGoalProgress = view!!.findViewById(R.id.selectedGoalProgress)
+        selectedGoalType = view!!.findViewById(R.id.selectedGoalType)
+
+        selectedGoalType.adapter = adapter
+
+        selectedGoalType.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+            override fun onItemSelected(adapter: AdapterView<*>?, view: View?, pos: Int, id: Long)
+            {
+                updatedGoalType = adapter!!.getItemAtPosition(pos) as GoalTypes?
+            }
+
+            override fun onNothingSelected(p0: AdapterView<*>?) {
+            }
+        }
 
         // grab the selected goal from shared arguments
         val selectedGoal = arguments?.getSerializable(Consts.SELECTED_GOAL) as GoalDataModel
@@ -43,6 +69,7 @@ class GoalEditorFragment : Fragment() {
         localUser = arguments?.getSerializable(Consts.LOCAL_USER_DATA) as LocalUserData
 
         selectedGoalName.text = getString(R.string.goal_name_editor, selectedGoal.goalName)
+        selectedGoalProgress.text = getString(R.string.goal_progress_value, selectedGoal.goalProgress)
 
         updateGoalButton = view!!.findViewById(R.id.updateGoalButton)
 
@@ -57,9 +84,10 @@ class GoalEditorFragment : Fragment() {
     {
         // get the updated goal name from the user
         updatedGoalName = selectedGoalName.text.toString()
+        updatedGoalProgress = selectedGoalProgress.text.toString()
 
         // update goal
-        GoalManager.updateGoal(goalId, updatedGoalName)
+        GoalManager.updateGoal(goalId, updatedGoalName, updatedGoalProgress, updatedGoalType!!)
 
         // transition to the management fragment
         goBackToGoalManagementFragment()
