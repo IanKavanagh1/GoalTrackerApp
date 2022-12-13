@@ -47,12 +47,10 @@
             android:id="@+id/loggedInUserTextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="36dp"
+            android:layout_marginStart="30dp"
             android:layout_marginTop="100dp"
             android:text="@string/user_email_text"
             android:textSize="20sp"
-            app:layout_constraintEnd_toStartOf="@+id/editEmailButton"
-            app:layout_constraintHorizontal_bias="0.442"
             app:layout_constraintStart_toEndOf="@+id/textView12"
             app:layout_constraintTop_toTopOf="parent" />
 
@@ -60,11 +58,10 @@
             android:id="@+id/loggedInUserDisplayName"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginStart="20dp"
             android:layout_marginTop="60dp"
             android:text="@string/user_email_text"
             android:textSize="20sp"
-            app:layout_constraintEnd_toStartOf="@+id/editDisplayNameButton"
-            app:layout_constraintHorizontal_bias="0.305"
             app:layout_constraintStart_toEndOf="@+id/textView"
             app:layout_constraintTop_toBottomOf="@+id/loggedInUserTextView" />
 
@@ -72,14 +69,13 @@
             android:id="@+id/loggedInUserPassword"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginStart="30dp"
             android:layout_marginTop="60dp"
+            android:password="true"
             android:text="@string/user_email_text"
             android:textSize="20sp"
-            app:layout_constraintEnd_toStartOf="@+id/editPasswordButton"
-            app:layout_constraintHorizontal_bias="0.433"
             app:layout_constraintStart_toEndOf="@+id/textView4"
-            app:layout_constraintTop_toBottomOf="@+id/loggedInUserDisplayName"
-            android:password="true"/>
+            app:layout_constraintTop_toBottomOf="@+id/loggedInUserDisplayName" />
 
         <Button
             android:id="@+id/logOutBtn"
@@ -93,39 +89,6 @@
             app:layout_constraintHorizontal_bias="0.496"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/loggedInUserPassword" />
-
-        <ImageButton
-            android:id="@+id/editEmailButton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="84dp"
-            android:layout_marginEnd="16dp"
-            android:minHeight="48dp"
-            android:src="@drawable/ic_baseline_edit_24"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-
-        <ImageButton
-            android:id="@+id/editDisplayNameButton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="40dp"
-            android:layout_marginEnd="16dp"
-            android:minHeight="48dp"
-            android:src="@drawable/ic_baseline_edit_24"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/editEmailButton" />
-
-        <ImageButton
-            android:id="@+id/editPasswordButton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="40dp"
-            android:layout_marginEnd="16dp"
-            android:minHeight="48dp"
-            android:src="@drawable/ic_baseline_edit_24"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/editDisplayNameButton" />
 
     </android.support.constraint.ConstraintLayout>
 

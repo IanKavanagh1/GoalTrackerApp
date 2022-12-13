@@ -26,11 +26,6 @@ class SettingsFragment : Fragment()
     private lateinit var displayNameTextView: TextView
     private lateinit var passwordTextView: TextView
 
-    // Edit Buttons
-    private lateinit var editEmailButton: ImageButton
-    private lateinit var editDisplayNameButton: ImageButton
-    private lateinit var editPasswordButton: ImageButton
-
     private lateinit var editTextDialog: EditTextDialog
 
     override fun onCreateView(
@@ -67,14 +62,11 @@ class SettingsFragment : Fragment()
         logOutButton.setOnClickListener { logOut() }
 
         // Grab edit buttons and set up listeners
-        editEmailButton = view!!.findViewById(R.id.editEmailButton)
-        editEmailButton.setOnClickListener { editEmail() }
+        emailTextView.setOnClickListener { editEmail() }
 
-        editDisplayNameButton = view!!.findViewById(R.id.editDisplayNameButton)
-        editDisplayNameButton.setOnClickListener { editDisplayName() }
+        displayNameTextView.setOnClickListener { editDisplayName() }
 
-        editPasswordButton = view!!.findViewById(R.id.editPasswordButton)
-        editPasswordButton.setOnClickListener { editPassword() }
+        passwordTextView.setOnClickListener { editPassword() }
     }
 
     private fun logOut()

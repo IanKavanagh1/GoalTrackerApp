@@ -14,7 +14,6 @@ import shared.Consts
 class GoalEditorFragment : Fragment() {
 
     private lateinit var selectedGoalName: TextView
-    private lateinit var selectedGoalProgress: TextView
     private lateinit var selectedGoalType: Spinner
     private lateinit var updateGoalButton: Button
     private lateinit var deleteGoalButton: Button
@@ -48,7 +47,6 @@ class GoalEditorFragment : Fragment() {
         }
 
         selectedGoalName = view!!.findViewById(R.id.selectedGoalName)
-        selectedGoalProgress = view!!.findViewById(R.id.selectedGoalProgress)
         selectedGoalType = view!!.findViewById(R.id.selectedGoalType)
 
         selectedGoalType.adapter = adapter
@@ -70,7 +68,6 @@ class GoalEditorFragment : Fragment() {
         localUser = arguments?.getSerializable(Consts.LOCAL_USER_DATA) as LocalUserData
 
         selectedGoalName.text = getString(R.string.goal_name_editor, selectedGoal.goalName)
-        selectedGoalProgress.text = getString(R.string.goal_progress_value, selectedGoal.goalProgress)
 
         updateGoalButton = view!!.findViewById(R.id.updateGoalButton)
 
@@ -89,7 +86,6 @@ class GoalEditorFragment : Fragment() {
     {
         // get the updated goal name from the user
         updatedGoalName = selectedGoalName.text.toString()
-        updatedGoalProgress = selectedGoalProgress.text.toString()
 
         // update goal
         GoalManager.updateGoal(goalId, updatedGoalName, updatedGoalProgress, updatedGoalType!!)
