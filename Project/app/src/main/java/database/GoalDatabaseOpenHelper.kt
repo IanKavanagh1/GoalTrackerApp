@@ -13,6 +13,7 @@ import shared.Consts
 class GoalDatabaseOpenHelper(context: Context, name: String, factory: SQLiteDatabase.CursorFactory?,
                              version: Int) : SQLiteOpenHelper(context, name, factory, version)
 {
+    private val cont = context
     private val tableName = Consts.GOAL_DATABASE
 
     private val columns: Array<String> = arrayOf("GOAL_ID", "GOAL_TYPE", "GOAL_NAME", "GOAL_TARGET",
@@ -95,7 +96,23 @@ class GoalDatabaseOpenHelper(context: Context, name: String, factory: SQLiteData
         for(i in 0 until c.count)
         {
             // add the goals to the userGoals list
-            userGoals.add(GoalDataModel(c.getInt(0), c.getInt(1), c.getString(2),0f))
+            var goalProgress = 0f
+
+            // Use the step counter sensor data to work out progress towards fitness goals
+            if(c.getInt(1) == GoalTypes.Fitness.ordinal)
+            {
+                val sharedPreferences = cont.getSharedPreferences(Consts.USER_PREFS, Context.MODE_PRIVATE)
+                val savedStepCount = sharedPreferences.getFloat(Consts.PREFS_PREVIOUS_TOTAL_STEPS, 0f)
+
+                if(checkProgressIsNumeric(c.getString(3)))
+                {
+                    // work out progress as a percentage
+                    Log.d("GD", "savedStepCount $savedStepCount")
+                    goalProgress = savedStepCount / c.getString(3).toFloat() * 100f
+                }
+            }
+
+            userGoals.add(GoalDataModel(c.getInt(0), c.getInt(1), c.getString(2),goalProgress))
             c.moveToNext()
         }
 
@@ -138,5 +155,11 @@ class GoalDatabaseOpenHelper(context: Context, name: String, factory: SQLiteData
     {
         val query = "DELETE FROM $tableName WHERE GOAL_ID='$goalId'"
         wb.execSQL(query)
+    }
+
+    // Safe guard against user entering a non numeric value which can result in a crash
+    private fun checkProgressIsNumeric(check : String) : Boolean
+    {
+        return check.toFloatOrNull() != null
     }
 }

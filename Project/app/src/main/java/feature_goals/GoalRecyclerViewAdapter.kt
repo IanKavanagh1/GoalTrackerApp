@@ -42,9 +42,21 @@ class GoalRecyclerViewAdapter(context: Context, goalData: ArrayList<GoalDataMode
                 p0.goalIconView.setImageIcon(icon)
             }
         }
+
+        data[p1].goalProgress
+
         p0.goalNameText.text = data[p1].goalName
-        p0.goalProgressText.text = data[p1].goalProgress.toString()
-        p0.goalProgressText.visibility = View.INVISIBLE
+
+        // Only show the progress label if we have progress greater than 0
+        if(data[p1].goalProgress > 0f)
+        {
+            p0.goalProgressText.text = data[p1].goalProgress.toString()
+            p0.goalProgressText.visibility = View.VISIBLE
+        }
+        else
+        {
+            p0.goalProgressText.visibility = View.INVISIBLE
+        }
     }
 
     override fun getItemCount(): Int
