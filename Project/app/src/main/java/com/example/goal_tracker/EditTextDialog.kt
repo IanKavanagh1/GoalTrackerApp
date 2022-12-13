@@ -39,6 +39,13 @@ class EditTextDialog(activity: Activity, userId: Int)
 
         editText = alertDialog.findViewById(R.id.editTextPopUp)
 
+        when(type)
+        {
+            EditableFieldType.Email -> editText.hint = "Change Email"
+            EditableFieldType.DisplayName -> editText.hint = "Change Display Name"
+            EditableFieldType.Password -> editText.hint = "Change Password"
+        }
+
         confirmButton = alertDialog.findViewById(R.id.confirmButton)
 
         confirmButton.setOnClickListener { confirmChanges(type) }
