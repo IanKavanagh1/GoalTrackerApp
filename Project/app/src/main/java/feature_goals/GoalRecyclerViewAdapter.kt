@@ -57,6 +57,17 @@ class GoalRecyclerViewAdapter(context: Context, goalData: ArrayList<GoalDataMode
         {
             p0.goalProgressText.visibility = View.INVISIBLE
         }
+
+        // Show the completed label if the goal is completed
+        if(data[p1].goalCompleted == 1)
+        {
+            p0.goalCompletedText.visibility = View.VISIBLE
+            p0.goalProgressText.visibility = View.INVISIBLE
+        }
+        else
+        {
+            p0.goalCompletedText.visibility = View.INVISIBLE
+        }
     }
 
     override fun getItemCount(): Int
@@ -71,6 +82,7 @@ class GoalRecyclerViewAdapter(context: Context, goalData: ArrayList<GoalDataMode
         var goalIconView: ImageView = itemView.findViewById(R.id.goal_icon)
         var goalNameText: TextView = itemView.findViewById(R.id.goal_name)
         var goalProgressText: TextView = itemView.findViewById(R.id.goal_progress)
+        var goalCompletedText: TextView = itemView.findViewById(R.id.goal_completed)
 
         // Set up on click listener for items
         val view = itemView.setOnClickListener {

@@ -13,7 +13,7 @@ object GoalManager
     fun setUpDatabase(context: Context)
     {
         // Initialise database
-        goalDatabaseOpenHelper = GoalDatabaseOpenHelper(context, dbName, null, 1)
+        goalDatabaseOpenHelper = GoalDatabaseOpenHelper(context, dbName, null, 2)
     }
 
     // Returns true if the create goal query was successful, false otherwise
@@ -38,5 +38,10 @@ object GoalManager
     fun removeGoal(goalId: Int)
     {
         goalDatabaseOpenHelper.removeGoal(goalId)
+    }
+
+    fun markGoalAsCompleted(goalId: Int) : Boolean
+    {
+        return goalDatabaseOpenHelper.markGoalAsCompleted(goalId)
     }
 }

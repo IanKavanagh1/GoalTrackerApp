@@ -18,6 +18,7 @@ class GoalEditorFragment : Fragment() {
     private lateinit var selectedGoalType: Spinner
     private lateinit var updateGoalButton: Button
     private lateinit var deleteGoalButton: Button
+    private lateinit var markAsCompletedButton: Button
     private var localUser: LocalUserData? = null
 
     private var updatedGoalName = ""
@@ -78,6 +79,10 @@ class GoalEditorFragment : Fragment() {
         deleteGoalButton = view!!.findViewById(R.id.deleteGoalButton)
 
         deleteGoalButton.setOnClickListener { deleteGoal(selectedGoal.goalId) }
+
+        markAsCompletedButton = view!!.findViewById(R.id.markAsCompletedButton)
+
+        markAsCompletedButton.setOnClickListener { markGoalAsCompleted(selectedGoal.goalId) }
     }
 
     private fun updateGoal(goalId: Int)
@@ -119,6 +124,16 @@ class GoalEditorFragment : Fragment() {
             it.supportFragmentManager?.beginTransaction()
                 ?.replace(R.id.frameLayout, goalManagementFragment, "")
                 ?.commit()
+        }
+    }
+
+    private fun markGoalAsCompleted(goalId: Int)
+    {
+        // Try to update the goal as completed
+        if (GoalManager.markGoalAsCompleted(goalId))
+        {
+            // if successful update goals list and go back to manage view
+            goBackToGoalManagementFragment()
         }
     }
 }

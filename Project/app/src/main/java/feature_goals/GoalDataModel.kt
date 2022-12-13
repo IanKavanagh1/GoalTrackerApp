@@ -7,4 +7,5 @@ data class GoalDataModel(
     val goalId: Int,
     val goalType: Int,
     val goalName: String?,
-    val goalProgress: Float) : Serializable
+    val goalProgress: Float,
+    val goalCompleted: Int) : Serializable

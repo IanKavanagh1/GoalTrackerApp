@@ -19,8 +19,9 @@
     <string name="mark_as_completed">Mark As Completed</string>
     <string name="goal_type">Goal Type</string>
     <string name="goal_progress">Goal Progress</string>
-    <string name="goal_progress_value">%.1f %</string>
+    <string name="goal_progress_value">%.1f</string>
     <string name="empty_goals">No Goals, Please Add Some!</string>
+    <string name="goal_completed">Completed!</string>
 
     <!--Account Feature Strings-->
     <string name="welcome_label">Welcome!</string>

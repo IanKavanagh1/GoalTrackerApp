@@ -17,7 +17,7 @@ class GoalDatabaseOpenHelper(context: Context, name: String, factory: SQLiteData
     private val tableName = Consts.GOAL_DATABASE
 
     private val columns: Array<String> = arrayOf("GOAL_ID", "GOAL_TYPE", "GOAL_NAME", "GOAL_TARGET",
-                                                    "GOAL_CURRENT", "USER_ID")
+                                                    "GOAL_CURRENT", "GOAL_COMPLETED", "USER_ID")
     private val where: String = "USER_ID = ?"
     private var where_args: Array<String>? = null
     private val group_by: String? = null
@@ -31,6 +31,7 @@ class GoalDatabaseOpenHelper(context: Context, name: String, factory: SQLiteData
             "GOAL_NAME string," +
             "GOAL_TARGET string," +
             "GOAL_CURRENT string," +
+            "GOAL_COMPLETED integer," +
             "USER_ID integer, FOREIGN KEY('USER_ID') REFERENCES user_database(ID)" +
             ")"
 
@@ -61,6 +62,7 @@ class GoalDatabaseOpenHelper(context: Context, name: String, factory: SQLiteData
             put("GOAL_NAME", goalName)
             put("GOAL_TARGET", goalTarget)
             put("GOAL_CURRENT", goalCurrent)
+            put("GOAL_COMPLETED", 0)
             put("USER_ID", userId)
         }
 
@@ -106,13 +108,12 @@ class GoalDatabaseOpenHelper(context: Context, name: String, factory: SQLiteData
 
                 if(checkProgressIsNumeric(c.getString(3)))
                 {
-                    // work out progress as a percentage
-                    Log.d("GD", "savedStepCount $savedStepCount")
-                    goalProgress = savedStepCount / c.getString(3).toFloat() * 100f
+                    goalProgress = savedStepCount
                 }
             }
 
-            userGoals.add(GoalDataModel(c.getInt(0), c.getInt(1), c.getString(2),goalProgress))
+            userGoals.add(GoalDataModel(c.getInt(0), c.getInt(1), c.getString(2), goalProgress,
+                c.getInt(5)))
             c.moveToNext()
         }
 
@@ -155,6 +156,33 @@ class GoalDatabaseOpenHelper(context: Context, name: String, factory: SQLiteData
     {
         val query = "DELETE FROM $tableName WHERE GOAL_ID='$goalId'"
         wb.execSQL(query)
+    }
+
+    // Returns true if the update query was successful, false otherwise
+    fun markGoalAsCompleted(goalId: Int) : Boolean
+    {
+        // where args for the update query
+        val where = "GOAL_ID = ?"
+        val whereArgs = arrayOf(goalId.toString())
+
+        // update the goal name for the selected goal
+        val updatedGoalValues = ContentValues().apply {
+            put("GOAL_COMPLETED", 1)
+        }
+
+        // store the result
+        val result = wb.update(tableName, updatedGoalValues, where, whereArgs)
+
+        // check if the update query was successful
+        if(result == -1)
+        {
+            // return false if it failed
+            Log.d("Goal Database Helper:", "Update Data Failed")
+            return false
+        }
+
+        // true otherwise
+        return true
     }
 
     // Safe guard against user entering a non numeric value which can result in a crash
